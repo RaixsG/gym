@@ -1,11 +1,131 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model clientes {
+  ID_cliente       Int             @id @unique(map: "ID_cliente") @default(autoincrement())
+  nombre           String          @db.VarChar(30)
+  apellido         String          @db.VarChar(30)
+  direccion        String          @db.VarChar(50)
+  telefono         String          @unique(map: "telefono") @db.VarChar(9)
+  email            String          @unique(map: "email") @db.VarChar(30)
+  fecha_nacimiento DateTime        @db.Date
+  inscripciones    inscripciones[]
+  miembros         miembros[]
+  venta            venta[]
+}
+
+model detalles_venta {
+  ID_detalle_venta Int       @id @unique(map: "ID_detalle_venta") @default(autoincrement())
+  cantidad         Int
+  ID_venta         Int
+  ID_producto      Int
+  productos        productos @relation(fields: [ID_producto], references: [ID_producto], onDelete: NoAction, onUpdate: NoAction, map: "detalles_venta_ibfk_1")
+  venta            venta     @relation(fields: [ID_venta], references: [ID_venta], onDelete: NoAction, onUpdate: NoAction, map: "detalles_venta_ibfk_2")
+
+  @@index([ID_producto], map: "ID_producto")
+  @@index([ID_venta], map: "ID_venta")
+}
+
+model ense_a_en {
+  ID_ense_a_en  Int             @id @unique(map: "ID_enseña_en") @default(autoincrement()) @map("ID_enseña_en")
+  ID_horario    Int
+  ID_instructor Int
+  horarios      horarios        @relation(fields: [ID_horario], references: [ID_horario], onDelete: NoAction, onUpdate: NoAction, map: "enseña_en_ibfk_1")
+  instructores  instructores    @relation(fields: [ID_instructor], references: [ID_instructor], onDelete: NoAction, onUpdate: NoAction, map: "enseña_en_ibfk_2")
+  inscripciones inscripciones[]
+
+  @@index([ID_horario], map: "ID_horario")
+  @@index([ID_instructor], map: "ID_instructor")
+  @@map("enseña_en")
+}
+
+model horarios {
+  ID_horario        Int         @id @unique(map: "ID_horario") @default(autoincrement())
+  hora_inicio       DateTime    @db.Time(0)
+  hora_finalizacion DateTime    @db.Time(0)
+  turno             String      @db.VarChar(20)
+  ense_a_en         ense_a_en[]
+}
+
+model inscripciones {
+  ID_inscripcion    Int       @id @unique(map: "ID_inscripcion") @default(autoincrement())
+  fecha_inscripcion DateTime  @db.Date
+  ID_cliente        Int
+  ID_ense_a_en      Int       @map("ID_enseña_en")
+  clientes          clientes  @relation(fields: [ID_cliente], references: [ID_cliente], onDelete: NoAction, onUpdate: NoAction, map: "inscripciones_ibfk_1")
+  ense_a_en         ense_a_en @relation(fields: [ID_ense_a_en], references: [ID_ense_a_en], onDelete: NoAction, onUpdate: NoAction, map: "inscripciones_ibfk_2")
+
+  @@index([ID_cliente], map: "ID_cliente")
+  @@index([ID_ense_a_en], map: "ID_enseña_en")
+}
+
+model instructores {
+  ID_instructor    Int         @id @unique(map: "ID_instructor") @default(autoincrement())
+  nombre           String      @db.VarChar(30)
+  apellido         String      @db.VarChar(30)
+  direccion        String      @db.VarChar(50)
+  telefono         String      @unique(map: "telefono") @db.VarChar(9)
+  email            String      @unique(map: "email") @db.VarChar(50)
+  fecha_nacimiento DateTime    @db.Date
+  especializacion  String      @db.VarChar(30)
+  foto_instructor  Bytes?      @db.Blob
+  ense_a_en        ense_a_en[]
+}
+
+model membresias {
+  ID_membresia     Int        @id @unique(map: "ID_membresia") @default(autoincrement())
+  nombre_membresia String     @db.VarChar(30)
+  precio           Decimal    @db.Decimal(10, 2)
+  beneficios       String     @db.VarChar(30)
+  miembros         miembros[]
+}
+
+model miembros {
+  ID_miembro         Int               @id @unique(map: "ID_miembro") @default(autoincrement())
+  estado_inscripcion Boolean
+  ID_membresia       Int
+  ID_cliente         Int
+  membresias         membresias        @relation(fields: [ID_membresia], references: [ID_membresia], onDelete: NoAction, onUpdate: NoAction, map: "miembros_ibfk_1")
+  clientes           clientes          @relation(fields: [ID_cliente], references: [ID_cliente], onDelete: NoAction, onUpdate: NoAction, map: "miembros_ibfk_2")
+  pago_membresias    pago_membresias[]
+
+  @@index([ID_cliente], map: "ID_cliente")
+  @@index([ID_membresia], map: "ID_membresia")
+}
+
+model pago_membresias {
+  ID_pago_mem Int      @id @default(autoincrement())
+  fecha_pago  DateTime @db.Date
+  cantidad    Int
+  metodo_pago String   @db.VarChar(30)
+  ID_miembro  Int
+  miembros    miembros @relation(fields: [ID_miembro], references: [ID_miembro], onDelete: NoAction, onUpdate: NoAction, map: "pago_membresias_ibfk_1")
+
+  @@index([ID_miembro], map: "ID_miembro")
+}
+
+model productos {
+  ID_producto     Int              @id @unique(map: "ID_producto") @default(autoincrement())
+  nombre_producto String           @db.VarChar(30)
+  descripcion     String           @db.VarChar(50)
+  precio          Decimal          @db.Decimal(10, 2)
+  cantidad_stock  Int
+  detalles_venta  detalles_venta[]
+}
+
+model venta {
+  ID_venta       Int              @id @default(autoincrement())
+  fecha_pago     DateTime         @db.Date
+  metodo_pago    String           @db.VarChar(30)
+  ID_cliente     Int
+  detalles_venta detalles_venta[]
+  clientes       clientes         @relation(fields: [ID_cliente], references: [ID_cliente], onDelete: NoAction, onUpdate: NoAction, map: "venta_ibfk_1")
+
+  @@index([ID_cliente], map: "ID_cliente")
 }
