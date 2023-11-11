@@ -1,9 +1,17 @@
 <script>
+    import EditClient from "../../../../routes/clients/elements/EditClient.svelte";
+
+    let showModal = false;
+
+    const toggleModal = () => {
+        showModal = !showModal;
+    }
+
     export let headers = [];
     export let data = [];
 
     let currentPage = 1;
-    const pageSize = 10;
+    const pageSize = 15;
 
     $: paginatedData = data.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
@@ -19,6 +27,16 @@
         }
     }
 
+    // **ACCIONS BUTTONS**
+    const editarCliente = () => {
+        toggleModal();
+        console.log('Editar Cliente')
+    }
+
+    const eliminarCliente = () => {
+        console.log('Eliminar Cliente')
+    }
+
 </script>
 
 
@@ -28,6 +46,7 @@
             {#each headers as header}
                 <th>{header}</th>
             {/each}
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -36,17 +55,33 @@
                 {#each Object.values(row) as cell}
                     <td>{cell}</td>
                 {/each}
+                <td class="buttons-actions">
+                    <button on:click={ editarCliente }>
+                        Edit
+                    </button>
+                    <button on:click={ eliminarCliente }>
+                        Delete
+                    </button>
+                </td>
             </tr>
         {/each}
     </tbody>
+    
     <tfoot>
         <tr>
             {#each headers as header}
                 <th>{header}</th>
             {/each}
+            <th>Acciones</th>
         </tr>
     </tfoot>
 </table>
+{#if showModal}
+    <dialog>
+        <EditClient />
+        <button on:click={toggleModal}>Cancelar</button>
+    </dialog>
+{/if}
 <div>
     <button on:click={prevPage} disabled={currentPage === 1}>Anterior</button>
     <button on:click={nextPage} disabled={currentPage * pageSize >= data.length}>Siguiente</button>
@@ -63,7 +98,6 @@
         padding: 5px;
         border-radius: 5px;
         border: 1px solid var(--text-color);
-        /* background-color: var(--primary-color); */
         color: var(--text-color);
         cursor: pointer;
     }
@@ -79,8 +113,10 @@
     }
 
     table {
+        position: relative;
         width: 100%;
         border-collapse: collapse;
+        transition: var(--tran-02);
     }
 
     tfoot {
@@ -99,6 +135,29 @@
 
     tr:nth-child(even) {
         background-color: var(--sidebar-color);
+    }
+
+    .buttons-actions {
+        display: flex;
+        justify-content: center;
+    }
+
+    dialog {
+        position: absolute;
+        z-index: 1;
+        top: 15%;
+        left: 50%;
+        transform: translateX(-50%);
+
+        display: flex;
+        flex-direction: column;
+        border-radius: 5px;
+
+        background-color: var(--sidebar-color);
+    }
+
+    .dialog-activate {
+        filter: blur(5px);
     }
 
 </style>

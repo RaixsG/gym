@@ -1,10 +1,12 @@
 import express from 'express'; // Importamos express
-
+import cors from 'cors'; // Importamos cors
 // Import Routes
 import clientesRoutes from './routes/clientes/clientes.routes.js';
 
 const app = express(); // Instanciamos express
+// const cors = require('cors');
 app.use(express.json()); // Configuramos express para que pueda parsear JSON
+app.use(cors()); // Configuramos CORS para que cualquier cliente pueda hacer peticiones a nuestra API
 app.disable('x-powered-by'); // Deshabilitamos la cabecera X-Powered-By
 
 // Escuchamos en el puerto 3000

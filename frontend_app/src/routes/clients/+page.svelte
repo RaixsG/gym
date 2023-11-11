@@ -1,51 +1,81 @@
 <script>
+    import { onMount } from "svelte";
+    import axios from "axios";
+
     import AddClient from "./elements/AddClient.svelte";
     import Tabla from "$lib/components/global/table/Tabla.svelte";
 
-    let headers = ['Nombre', 'Apellido', 'Dirección', 'Teléfono', 'Correo electrónico', 'Fecha de nacimiento'];
+    let showModal = false;
 
-    let data = [
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
-        {'Nombre': "Ale", 'Apellido': "Linares", 'Dirección':"Calle 1", 'Teléfono':123456789, 'Correo electrónico': "correo@corre.com", 'Fecha de nacimiento': "01/01/2000"},
+    const toggleModal = () => {
+        showModal = !showModal;
+    }
 
-    ]
+    const url = "http://localhost:3000/api/clientes";
+    let headers = [
+        "Nombre",
+        "Apellido",
+        "Dirección",
+        "Teléfono",
+        "Correo electrónico",
+        "Fecha de nacimiento",
+    ];
+    let data = [];
+
+    // Endpoint
+    function getTodosClientes() {
+        axios
+            .get(url)
+            .then((response) => {
+                const filter = response.data;
+                data = filter.map((item) => {
+                    return {
+                        nombre: item.nombre,
+                        apellido: item.apellido,
+                        direccion: item.direccion,
+                        telefono: item.telefono,
+                        correo: item.correo,
+                        fecha_nacimiento: item.fecha_nacimiento,
+                    };
+                });
+            })
+            .catch((error) =>
+                console.log(
+                    `Error en la peticion de clientes: ${JSON.stringify(error)}`
+                )
+            );
+    }
+
+    onMount(() => {
+        getTodosClientes();
+    });
 </script>
 
-<div>
-    <article>
-        <section>
-            <h1>Client</h1>
-            <AddClient />
-        </section>
-        <section class="tabla">
+<div class="contend">
+    <article class={`${showModal ? "dialog-activate" : ""}`}>
+        <h1>Client</h1>
+        <section class="contend-table">
+            <button class="button-add" on:click={toggleModal}
+                >Agregar Nuevo Cliente
+            </button>
             <Tabla {headers} {data} />
         </section>
     </article>
+    {#if showModal}
+        <dialog>
+            <AddClient />
+            <button on:click={toggleModal}>Cancelar</button>
+        </dialog>
+    {/if}
 </div>
 
 <style>
-    div {
+    .contend {
+        z-index: -1;
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
 
         top: 0;
         left: 0;
@@ -59,27 +89,65 @@
     }
 
     article {
-        display: grid;
-        grid-template-areas: "formulario tabla";
-
-        width: 100%;
+        width: 90%;
         height: 100%;
-        padding: 15px;
-    }
-
-    section {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
     }
 
     h1 {
         display: flex;
         justify-content: center;
         padding-top: 20px;
+
+        font-size: 2rem;
     }
 
+    .contend-table {
+        position: relative;
+        display: flex;
+        flex-direction: column;
 
+        height: 500px;
+    }
 
+    .button-add {
+        width: 150px;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    dialog {
+        position: absolute;
+        z-index: 1;
+        top: 15%;
+        left: 50%;
+        transform: translateX(-50%);
+
+        display: flex;
+        flex-direction: column;
+        border-radius: 5px;
+
+        background-color: var(--sidebar-color);
+    }
+
+    .dialog-activate {
+        filter: blur(5px);
+    }
+
+    button {
+        margin: 10px;
+        padding: 5px;
+        border-radius: 5px;
+        color: var(--text-color);
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    button:disabled {
+        background-color: var(--text-color);
+        cursor: default;
+    }
 </style>

@@ -1,4 +1,5 @@
 <script>
+    
 </script>
 
 <form method="dialog">
@@ -26,7 +27,7 @@
         Fecha de nacimiento:
         <input type="date" name="fechaNacimiento" />
     </label>
-    <button type="submit">Agregar</button>
+    <button type="submit">Confirmar</button>
 </form>
 
 <style>
