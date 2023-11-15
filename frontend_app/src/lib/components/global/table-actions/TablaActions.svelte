@@ -1,26 +1,22 @@
 <script>
-    import EditClient from "../../../../routes/clients/elements/EditClient.svelte";
     import { modalStore } from "../../../../store/modal";
 
-    let showModal = false;
-
+    // Data
     export let headers = [];
     export let data = [];
 
+    // Paginación
     let currentPage = 1;
     const pageSize = 15;
-
     $: paginatedData = data.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize
     );
-
     function nextPage() {
         if (currentPage * pageSize < data.length) {
             currentPage++;
         }
     }
-
     function prevPage() {
         if (currentPage > 1) {
             currentPage--;
@@ -28,14 +24,16 @@
     }
 
     // **ACCIONS BUTTONS**
-    const editarCliente = () => {
-        modalStore.set({ showModal: true });
-        console.log('Editar Cliente')
-    }
+    const editarCliente = (id) => {
+        let user = paginatedData.find((user) => user.id === id);
+        console.log(user);
+        modalStore.set({ showModal: true , component: "EditClient" });
+        console.log("Editar Cliente");
+    };
 
     const eliminarCliente = () => {
-        console.log('Eliminar Cliente')
-    }
+        console.log("Eliminar Cliente");
+    };
 </script>
 
 <table>
@@ -54,16 +52,8 @@
                     <td>{cell}</td>
                 {/each}
                 <td class="buttons-actions">
-                    <button
-                        on:click = { editarCliente }
-                    >
-                        Edit
-                    </button>
-                    <button
-                        on:click = { eliminarCliente }
-                    >
-                        Delete
-                    </button>
+                    <button on:click={editarCliente(row.id)}> Edit </button>
+                    <button on:click={eliminarCliente}> Delete </button>
                 </td>
             </tr>
         {/each}
@@ -77,12 +67,6 @@
         </tr>
     </tfoot>
 </table>
-{#if showModal}
-    <dialog>
-        <EditClient />
-        <button on:click={() => modalStore.set({ showModal: false })}>Cancelar</button>
-    </dialog>
-{/if}
 <div>
     <button on:click={prevPage} disabled={currentPage === 1}>Anterior</button>
     <button on:click={nextPage} disabled={currentPage * pageSize >= data.length}
@@ -158,9 +142,5 @@
         border-radius: 5px;
 
         background-color: var(--sidebar-color);
-    }
-
-    .dialog-activate {
-        filter: blur(5px);
     }
 </style>

@@ -3,13 +3,19 @@
     import { modalStore } from "../../store/modal";
     import axios from "axios";
 
-    import AddClient from "./elements/AddClient.svelte";
+    // Components
+    import { 
+        AddClient,
+        EditClient
+    } from "$lib/components/elementsRoutes/clients";
     import TablaActions from "$lib/components/global/table-actions/TablaActions.svelte";
 
     // **Modal**
     let showModal = false;
+    let component = null;
     modalStore.subscribe((state) => {
         showModal = state.showModal;
+        component = state.component;
     });
 
     const url = "http://localhost:3000/api/clientes";
@@ -35,7 +41,7 @@
                         apellido: item.apellido,
                         direccion: item.direccion,
                         telefono: item.telefono,
-                        correo: item.correo,
+                        correo: item.email,
                         fecha_nacimiento: item.fecha_nacimiento,
                     };
                 });
@@ -56,7 +62,10 @@
     <article class={`${showModal ? "dialog-activate" : ""}`}>
         <h1>Client</h1>
         <section class="contend-table">
-            <button class="button-add" on:click={() => modalStore.set({ showModal: true })}
+            <button
+                class="button-add"
+                on:click={() =>
+                    modalStore.set({ showModal: true, component: "AddClient" })}
                 >Agregar Nuevo Cliente
             </button>
             <TablaActions {headers} {data} />
@@ -64,8 +73,11 @@
     </article>
     {#if showModal}
         <dialog>
-            <AddClient />
-            <button on:click={() => modalStore.set({showModal: false})}>Cancelar</button>
+            {#if component === "AddClient"}
+                <AddClient />
+            {:else if component === "EditClient"}
+                <EditClient />
+            {/if}
         </dialog>
     {/if}
 </div>
