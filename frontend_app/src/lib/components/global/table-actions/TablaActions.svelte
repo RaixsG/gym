@@ -1,11 +1,19 @@
 <script>
+    import EditClient from "../../../../routes/clients/elements/EditClient.svelte";
+    import { modalStore } from "../../../../store/modal";
+
+    let showModal = false;
+
     export let headers = [];
     export let data = [];
 
     let currentPage = 1;
     const pageSize = 15;
 
-    $: paginatedData = data.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+    $: paginatedData = data.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize
+    );
 
     function nextPage() {
         if (currentPage * pageSize < data.length) {
@@ -19,8 +27,16 @@
         }
     }
 
-</script>
+    // **ACCIONS BUTTONS**
+    const editarCliente = () => {
+        modalStore.set({ showModal: true });
+        console.log('Editar Cliente')
+    }
 
+    const eliminarCliente = () => {
+        console.log('Eliminar Cliente')
+    }
+</script>
 
 <table>
     <thead>
@@ -28,6 +44,7 @@
             {#each headers as header}
                 <th>{header}</th>
             {/each}
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -36,21 +53,41 @@
                 {#each Object.values(row) as cell}
                     <td>{cell}</td>
                 {/each}
+                <td class="buttons-actions">
+                    <button
+                        on:click = { editarCliente }
+                    >
+                        Edit
+                    </button>
+                    <button
+                        on:click = { eliminarCliente }
+                    >
+                        Delete
+                    </button>
+                </td>
             </tr>
         {/each}
     </tbody>
-    
     <tfoot>
         <tr>
             {#each headers as header}
                 <th>{header}</th>
             {/each}
+            <th>Acciones</th>
         </tr>
     </tfoot>
 </table>
+{#if showModal}
+    <dialog>
+        <EditClient />
+        <button on:click={() => modalStore.set({ showModal: false })}>Cancelar</button>
+    </dialog>
+{/if}
 <div>
     <button on:click={prevPage} disabled={currentPage === 1}>Anterior</button>
-    <button on:click={nextPage} disabled={currentPage * pageSize >= data.length}>Siguiente</button>
+    <button on:click={nextPage} disabled={currentPage * pageSize >= data.length}
+        >Siguiente</button
+    >
 </div>
 
 <style>
@@ -58,7 +95,7 @@
         display: flex;
         align-items: center;
     }
-    
+
     button {
         margin: 10px;
         padding: 5px;
@@ -89,7 +126,8 @@
         filter: opacity(0.5);
     }
 
-    th, td {
+    th,
+    td {
         border: 1px solid var(--text-color);
         padding: 8px;
     }
@@ -103,4 +141,26 @@
         background-color: var(--sidebar-color);
     }
 
+    .buttons-actions {
+        display: flex;
+        justify-content: center;
+    }
+
+    dialog {
+        position: absolute;
+        z-index: 1;
+        top: 15%;
+        left: 50%;
+        transform: translateX(-50%);
+
+        display: flex;
+        flex-direction: column;
+        border-radius: 5px;
+
+        background-color: var(--sidebar-color);
+    }
+
+    .dialog-activate {
+        filter: blur(5px);
+    }
 </style>

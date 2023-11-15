@@ -1,15 +1,16 @@
 <script>
     import { onMount } from "svelte";
+    import { modalStore } from "../../store/modal";
     import axios from "axios";
 
     import AddClient from "./elements/AddClient.svelte";
-    import Tabla from "$lib/components/global/table/Tabla.svelte";
+    import TablaActions from "$lib/components/global/table-actions/TablaActions.svelte";
 
+    // **Modal**
     let showModal = false;
-
-    const toggleModal = () => {
-        showModal = !showModal;
-    }
+    modalStore.subscribe((state) => {
+        showModal = state.showModal;
+    });
 
     const url = "http://localhost:3000/api/clientes";
     let headers = [
@@ -55,16 +56,16 @@
     <article class={`${showModal ? "dialog-activate" : ""}`}>
         <h1>Client</h1>
         <section class="contend-table">
-            <button class="button-add" on:click={toggleModal}
+            <button class="button-add" on:click={() => modalStore.set({ showModal: true })}
                 >Agregar Nuevo Cliente
             </button>
-            <Tabla {headers} {data} />
+            <TablaActions {headers} {data} />
         </section>
     </article>
     {#if showModal}
         <dialog>
             <AddClient />
-            <button on:click={toggleModal}>Cancelar</button>
+            <button on:click={() => modalStore.set({showModal: false})}>Cancelar</button>
         </dialog>
     {/if}
 </div>
