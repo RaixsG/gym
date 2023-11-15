@@ -2,6 +2,7 @@ import express from 'express'; // Importamos express
 import cors from 'cors'; // Importamos cors
 // Import Routes
 import clientesRoutes from './routes/clientes/clientes.routes.js';
+import instructoresRoutes from './routes/instructores/instructores.routes.js';
 
 const app = express(); // Instanciamos express
 // const cors = require('cors');
@@ -26,6 +27,7 @@ app.get('/api', (_, res)   => {
 
 // Ruta clientes
 app.use('/api', clientesRoutes);
+app.use('/api', instructoresRoutes);
 
 
 
