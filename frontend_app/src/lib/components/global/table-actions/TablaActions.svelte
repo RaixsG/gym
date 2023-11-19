@@ -52,8 +52,8 @@
                     <td>{cell}</td>
                 {/each}
                 <td class="buttons-actions">
-                    <button on:click={editarCliente(row.id)}> Edit </button>
-                    <button on:click={eliminarCliente}> Delete </button>
+                    <button on:click={editarCliente(row.id)}>Edit</button>
+                    <button on:click={eliminarCliente}>Delete</button>
                 </td>
             </tr>
         {/each}
