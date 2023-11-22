@@ -1,15 +1,26 @@
+<script>
+    import { goto } from "$app/navigation";
+    import { appStatus } from "$stores"
+
+    const doLogout = () => {
+        console.log("Log Outing");
+        localStorage.removeItem("appStatus");
+        appStatus.set("unauth");
+        goto("/login");
+    };
+    
+</script>
+
 <li>
-    <a href="#">
+    <div>
         <i class="bx bx-log-out" />
         <button
-            on:click={() => {
-                console.log("Log out");
-            }}
+            on:click={ doLogout }
             on:keypress={(event) => console.log(event)}
         >
             Logout
         </button>
-    </a>
+    </div>
 </li>
 
 <style>
@@ -42,26 +53,27 @@
         display: flex;
         align-items: center;
     }
-    a {
+    div {
         height: 100%;
         width: 100%;
         display: flex;
         align-items: center;
         text-decoration: none;
         border-radius: 6px;
+        cursor: pointer;
         transition: var(--tran-04);
     }
 
-    a:hover {
+    div:hover {
         background-color: var(--primary-color);
     }
 
-    a:hover button,
-    a:hover i {
+    div:hover button,
+    div:hover i {
         color: var(--white);
     }
     /* SIDEVAR CLOSED */
-    section.hidden li a button {
+    section.hidden li div button {
         display: none;
     }
 

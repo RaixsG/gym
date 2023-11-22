@@ -68,10 +68,14 @@
     </tfoot>
 </table>
 <div>
-    <button on:click={prevPage} disabled={currentPage === 1}>Anterior</button>
-    <button on:click={nextPage} disabled={currentPage * pageSize >= data.length}
-        >Siguiente</button
-    >
+    <button on:click={prevPage} disabled={currentPage === 1}>
+        Anterior
+    </button>
+    <button 
+        on:click={nextPage}
+        disabled={currentPage * pageSize >= data.length}>
+        Siguiente
+    </button>
 </div>
 
 <style>
@@ -129,18 +133,5 @@
         display: flex;
         justify-content: center;
     }
-
-    dialog {
-        position: absolute;
-        z-index: 1;
-        top: 15%;
-        left: 50%;
-        transform: translateX(-50%);
-
-        display: flex;
-        flex-direction: column;
-        border-radius: 5px;
-
-        background-color: var(--sidebar-color);
-    }
+    
 </style>

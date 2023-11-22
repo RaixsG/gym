@@ -1,46 +1,51 @@
 <script>
-    let user = "";
-    let password = "";
+    import axios from "axios";
+    import { goto } from "$app/navigation"
+    import { appStatus } from "$stores"
+    let user = null;
+    let password = null;
 
-    const handleLogin = () => {
-        // Aquí iría la lógica para manejar el inicio de sesión
-        async function handleLogin() {
-            const response = await fetch("/api/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ user, password }),
+    const url = "http://localhost:3000/api/login";
+
+    const doLogin = () => {
+        console.log(`Make API login request with following data: { user: ${user}, password: ${password} }`)
+        axios
+            .post(url, {
+                usuario: user,
+                password: password
+            })
+            .then(res => {
+                console.log(res.data);
+                console.log('EXITO');
+                localStorage.setItem("appStatus", "auth");
+                appStatus.set("auth");
+                localStorage.setItem("user", JSON.stringify(res.data.user));
+                goto('/');
+            })
+            .catch(err => {
+                console.log(JSON.stringify(err));
+                alert("Usuario o contraseña incorrectos");
             });
-
-            if (response.ok) {
-                // Inicio de sesión exitoso
-            } else {
-                // Error de inicio de sesión
-            }
-        }
     };
+
 </script>
 
 <div class="login wrap">
     <div class="h1">Inicio de Sesión</div>
-    <form on:submit|preventDefault={ handleLogin }>
-        <input
-            pattern="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{(1, 3)}\.[0-9]{(1,
-            3)}\.[0-9]{(1, 3)}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{(2,
-            4)}|[0-9]{(1, 3)})(\]?)$"
-            placeholder="Email"
-            id="email"
-            name="email"
+    <form on:submit={ doLogin }>
+        <input 
+            placeholder="User"
             type="text"
+            name="user"
+            on:change={ e => user = e.target.value }
         />
         <input
             placeholder="Password"
-            id="password"
-            name="password"
             type="password"
+            name="password"
+            on:change={ e => password = e.target.value }
         />
-        <input value="Login" class="btn" type="submit" />
+        <button class="btn" type="submit">Login</button>
     </form>
 </div>
 
@@ -55,8 +60,7 @@
         border-radius: 17px;
         padding-bottom: 50px;
         font-size: 1.3em;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-            Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        font-family: var(--font);
     }
 
     .login input[type="text"],
@@ -79,8 +83,7 @@
         -webkit-appearance: none;
     }
 
-    .login input[type="submit"],
-    .login input[type="button"],
+    .login button[type="submit"],
     .h1 {
         border: 0;
         outline: 0;
@@ -122,17 +125,6 @@
 
     .login input[type="password"] {
         animation: bounce1 1.3s;
-    }
-
-    .ui {
-        font-weight: bolder;
-        background: -webkit-linear-gradient(#b563ff, #535efc, #0ec8ee);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        border-bottom: 4px solid transparent;
-        border-image: linear-gradient(0.25turn, #535efc, #0ec8ee, #0ec8ee);
-        border-image-slice: 1;
-        display: inline;
     }
 
     @media only screen and (max-width: 600px) {

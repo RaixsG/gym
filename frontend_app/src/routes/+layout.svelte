@@ -2,9 +2,30 @@
     import { theme } from "../store/theme";
     import "../styles.css";
     import Dashboard from "$lib/components/dashboard/Dashboard.svelte";
+    import { onMount } from "svelte";
+    import { appStatus } from '$stores';
 
     let isHidden = false;
     const handleHidden = () => isHidden = !isHidden;
+
+    const checkLocalStorage = () => {
+        const localAppStatus = localStorage.getItem("appStatus");
+        if (localAppStatus) {
+            appStatus.set(localAppStatus);
+        } else {
+            appStatus.set('unauth');
+        };
+    }
+
+    onMount(() => {
+        checkLocalStorage();
+    })
+
+    let status;
+    appStatus.subscribe(state => status = state);
+
+    $: console.log(`App status is now: ${status}`);
+
 </script>
 
 <div
@@ -12,7 +33,9 @@
     class:dark={$theme === "Dark"}
 >
     <slot />
-    <Dashboard {isHidden} {handleHidden} />
+    {#if status === 'auth'}
+        <Dashboard {isHidden} {handleHidden} />
+    {/if}
 </div>
 
 <style>

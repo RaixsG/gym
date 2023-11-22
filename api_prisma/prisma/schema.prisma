@@ -125,7 +125,13 @@ model venta {
   metodo_pago    String           @db.VarChar(30)
   ID_cliente     Int
   detalles_venta detalles_venta[]
-  clientes       clientes         @relation(fields: [ID_cliente], references: [ID_cliente], onDelete: NoAction, onUpdate: NoAction, map: "venta_ibfk_1")
+  clientes       clientes?        @relation(fields: [ID_cliente], references: [ID_cliente], onDelete: NoAction, onUpdate: NoAction, map: "venta_ibfk_1")
 
   @@index([ID_cliente], map: "ID_cliente")
+}
+
+model users {
+  id       Int      @id @default(autoincrement())
+  username String   @unique @db.VarChar(30)
+  password String   @db.VarChar(30)
 }

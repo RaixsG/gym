@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 19-11-2023 a las 04:40:00
+-- Tiempo de generación: 20-11-2023 a las 23:23:13
 -- Versión del servidor: 8.0.34
 -- Versión de PHP: 8.1.10
 
@@ -163,6 +163,25 @@ CREATE TABLE `productos` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `users`
+--
+
+CREATE TABLE `users` (
+  `id` int NOT NULL,
+  `username` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `password`) VALUES
+(1, 'admin', 'admin');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `venta`
 --
 
@@ -195,6 +214,8 @@ CREATE TABLE `_prisma_migrations` (
 --
 
 INSERT INTO `_prisma_migrations` (`id`, `checksum`, `finished_at`, `migration_name`, `logs`, `rolled_back_at`, `started_at`, `applied_steps_count`) VALUES
+('6ec6b52f-6f54-4279-89b6-667a52eb40c3', '0f78f90b97b82b6e35d8d5fea59152e4cbdc3ee44f6ce4491b8f28991589fc6c', '2023-11-20 18:12:59.763', '20231120181259_edit_login', NULL, NULL, '2023-11-20 18:12:59.745', 1),
+('6ec81548-ca4a-47a4-95c0-5f508267b63d', 'c6ac1e86b3a9f36ccdd1420f9da5da3e8165956e9b0ceafdb98bceb5408384dd', '2023-11-20 18:01:32.487', '20231120180132_login', NULL, NULL, '2023-11-20 18:01:32.472', 1),
 ('ad220dbe-d3df-4526-a174-7280ab55468f', '566cc00f3999592c2ddcb817b635deceb6cb58c4343ccc21ac22a06b012f3eaf', '2023-11-19 04:38:33.666', '20231031182451_refactor', NULL, NULL, '2023-11-19 04:38:33.630', 1),
 ('c583108d-826e-48b8-afdc-0fbe1c012053', '66ba2aeba5b7c970bc694454621d9a6b79f39effdf6afbcfe176baea1c08f3bd', '2023-11-19 04:38:33.629', '20231030021413_init', NULL, NULL, '2023-11-19 04:38:33.358', 1);
 
@@ -285,6 +306,13 @@ ALTER TABLE `productos`
   ADD UNIQUE KEY `ID_producto` (`ID_producto`);
 
 --
+-- Indices de la tabla `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_username_key` (`username`);
+
+--
 -- Indices de la tabla `venta`
 --
 ALTER TABLE `venta`
@@ -360,6 +388,12 @@ ALTER TABLE `pago_membresias`
 --
 ALTER TABLE `productos`
   MODIFY `ID_producto` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `venta`
