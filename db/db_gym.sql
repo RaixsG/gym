@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 20-11-2023 a las 23:23:13
+-- Tiempo de generación: 23-11-2023 a las 19:12:07
 -- Versión del servidor: 8.0.34
 -- Versión de PHP: 8.1.10
 
@@ -36,6 +36,14 @@ CREATE TABLE `clientes` (
   `email` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `fecha_nacimiento` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `clientes`
+--
+
+INSERT INTO `clientes` (`ID_cliente`, `nombre`, `apellido`, `direccion`, `telefono`, `email`, `fecha_nacimiento`) VALUES
+(1, 'Prueba 1', 'Prueba 1', 'Prueba 1', '123456789', 'Prueba 2', '2002-02-02'),
+(2, 'Prueba 2', 'Prueba 2', 'Prueba 2', '987654321', 'Prueba 1', '2002-02-02');
 
 -- --------------------------------------------------------
 
@@ -333,7 +341,7 @@ ALTER TABLE `_prisma_migrations`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `ID_cliente` int NOT NULL AUTO_INCREMENT;
+  MODIFY `ID_cliente` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `detalles_venta`
