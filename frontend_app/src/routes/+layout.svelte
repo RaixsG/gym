@@ -4,6 +4,7 @@
     import Dashboard from "$lib/components/dashboard/Dashboard.svelte";
     import { onMount } from "svelte";
     import { appStatus } from '$stores';
+    import RedirectToLogin from "$lib/components/login/RedirectToLogin.svelte";
 
     let isHidden = false;
     const handleHidden = () => isHidden = !isHidden;
@@ -29,18 +30,29 @@
 </script>
 
 <div
-    class="app"
+    class = {`${status == 'auth' ? "app": "app-unLogin"}`} 
     class:dark={$theme === "Dark"}
 >
     <slot />
     {#if status === 'auth'}
         <Dashboard {isHidden} {handleHidden} />
+    {:else if status === 'unauth'}
+        <RedirectToLogin />
     {/if}
 </div>
 
 <style>
     .app {
         padding-left: 88px;
+    }
+
+    .app-unLogin {
+        background-color: var(--sidebar-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100vh;
     }
     .dark {
         /* ====Colors==== */

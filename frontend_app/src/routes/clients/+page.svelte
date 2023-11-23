@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import { modalStore } from "../../store/modal";
     import axios from "axios";
+    import { error } from "@sveltejs/kit";
 
     // Components
     import { 
@@ -9,6 +10,14 @@
         EditClient
     } from "$lib/components/elementsRoutes/clients";
     import TablaActions from "$lib/components/global/table-actions/TablaActions.svelte";
+
+    // Protected route
+    let status;
+    export function load(e) {
+        if (status === 'unauth') {
+            return error(401, 'Unauthorized');
+        }
+    }
 
     // **Modal**
     let showModal = false;
