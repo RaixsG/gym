@@ -1,8 +1,12 @@
 <script>
     import { onMount } from "svelte";
-    import { modalStore } from "../../store/modal";
+    import dayjs from 'dayjs';
+    import utc from 'dayjs/plugin/utc';
     import axios from "axios";
+    import { modalStore } from "../../store/modal";
     import { error } from "@sveltejs/kit";
+
+    dayjs.extend(utc);
 
     // Components
     import { 
@@ -45,13 +49,15 @@
             .then((response) => {
                 const filter = response.data;
                 data = filter.map((item) => {
+                    let fecha = dayjs.utc(item.fecha_nacimiento).format('DD/MM/YYYY');
+                    console.log('fecha formateada: ' + fecha);
                     return {
                         nombre: item.nombre,
                         apellido: item.apellido,
                         direccion: item.direccion,
                         telefono: item.telefono,
                         correo: item.email,
-                        fecha_nacimiento: item.fecha_nacimiento,
+                        fecha_nacimiento: fecha,
                     };
                 });
             })

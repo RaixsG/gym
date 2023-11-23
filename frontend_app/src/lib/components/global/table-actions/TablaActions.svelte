@@ -49,7 +49,7 @@
         {#each paginatedData as row}
             <tr>
                 {#each Object.values(row) as cell}
-                    <td>{cell}</td>
+                    <td class="data-center">{cell}</td>
                 {/each}
                 <td class="buttons-actions">
                     <button on:click={editarCliente(row.id)}>Edit</button>
@@ -132,6 +132,10 @@
     .buttons-actions {
         display: flex;
         justify-content: center;
+    }
+
+    .data-center {
+        text-align: center;
     }
     
 </style>
