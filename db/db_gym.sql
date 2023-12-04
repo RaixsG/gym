@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost:3306
--- Tiempo de generación: 23-11-2023 a las 19:12:07
+-- Servidor: localhost
+-- Tiempo de generación: 04-12-2023 a las 17:06:08
 -- Versión del servidor: 8.0.34
 -- Versión de PHP: 8.1.10
 
@@ -42,8 +42,13 @@ CREATE TABLE `clientes` (
 --
 
 INSERT INTO `clientes` (`ID_cliente`, `nombre`, `apellido`, `direccion`, `telefono`, `email`, `fecha_nacimiento`) VALUES
-(1, 'Prueba 1', 'Prueba 1', 'Prueba 1', '123456789', 'Prueba 2', '2002-02-02'),
-(2, 'Prueba 2', 'Prueba 2', 'Prueba 2', '987654321', 'Prueba 1', '2002-02-02');
+(1, 'Alessyo', 'Linares Vargas', 'Jr. 20 de abril', '989369107', 'jhardelloficial@gmail.com', '2002-02-02'),
+(2, 'Aria', 'Vargas', 'Jr. Los mangos', '923145766', 'oferplus210@sakurape.com', '2004-01-05'),
+(3, 'Kheisy', 'Vargas', 'Jr. Los mangos', '975315984', '989369107@gmail.com', '2003-08-24'),
+(4, 'Pancho', 'Apuela', 'Jr. Apuela', '123456789', 'apuela@apuela.com', '2003-06-17'),
+(5, 'Prueba 1', 'Prueba 1', 'Prueba 1', 'Prueba 32', 'Prueba 4', '2002-01-01'),
+(6, 'Su', 'Apuela', 'Jr. Apuela', '741258963', '2022200042@ucss.pe', '2005-01-11'),
+(7, 'General01', 'General01', 'General01', 'General01', 'General01@General01.com', '2000-01-01');
 
 -- --------------------------------------------------------
 
@@ -58,6 +63,15 @@ CREATE TABLE `detalles_venta` (
   `ID_producto` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `detalles_venta`
+--
+
+INSERT INTO `detalles_venta` (`ID_detalle_venta`, `cantidad`, `ID_venta`, `ID_producto`) VALUES
+(1, 5, 1, 1),
+(2, 3, 2, 1),
+(3, 5, 3, 2);
+
 -- --------------------------------------------------------
 
 --
@@ -69,6 +83,16 @@ CREATE TABLE `enseña_en` (
   `ID_horario` int NOT NULL,
   `ID_instructor` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `enseña_en`
+--
+
+INSERT INTO `enseña_en` (`ID_enseña_en`, `ID_horario`, `ID_instructor`) VALUES
+(1, 1, 1),
+(2, 1, 1),
+(3, 2, 2),
+(4, 3, 2);
 
 -- --------------------------------------------------------
 
@@ -83,6 +107,15 @@ CREATE TABLE `horarios` (
   `turno` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `horarios`
+--
+
+INSERT INTO `horarios` (`ID_horario`, `hora_inicio`, `hora_finalizacion`, `turno`) VALUES
+(1, '05:30:00', '11:59:00', 'Mañana'),
+(2, '12:00:00', '16:59:00', 'Tarde'),
+(3, '17:00:00', '21:00:00', 'Noche');
+
 -- --------------------------------------------------------
 
 --
@@ -95,6 +128,16 @@ CREATE TABLE `inscripciones` (
   `ID_cliente` int NOT NULL,
   `ID_enseña_en` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `inscripciones`
+--
+
+INSERT INTO `inscripciones` (`ID_inscripcion`, `fecha_inscripcion`, `ID_cliente`, `ID_enseña_en`) VALUES
+(1, '2023-12-02', 6, 3),
+(2, '2023-12-02', 5, 3),
+(3, '2023-12-01', 2, 3),
+(4, '2023-12-01', 3, 2);
 
 -- --------------------------------------------------------
 
@@ -114,6 +157,14 @@ CREATE TABLE `instructores` (
   `foto_instructor` blob
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `instructores`
+--
+
+INSERT INTO `instructores` (`ID_instructor`, `nombre`, `apellido`, `direccion`, `telefono`, `email`, `fecha_nacimiento`, `especializacion`, `foto_instructor`) VALUES
+(1, 'Instructor 1', 'Instructor 1', 'Instructor 1', '975315984', 'jhardelloficial@gmail.com', '1985-06-12', 'Cardio', NULL),
+(2, 'Instructor 2', 'Instructor 2', 'Instructor 2', '923145766', 'Instructor2@Instructor2.com', '1991-11-12', 'Peso', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -127,6 +178,14 @@ CREATE TABLE `membresias` (
   `beneficios` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `membresias`
+--
+
+INSERT INTO `membresias` (`ID_membresia`, `nombre_membresia`, `precio`, `beneficios`) VALUES
+(1, 'Normal', 100.00, 'GYM + BAILE'),
+(2, 'VIP', 110.00, 'GYM + BAILE + AGUA');
+
 -- --------------------------------------------------------
 
 --
@@ -137,8 +196,18 @@ CREATE TABLE `miembros` (
   `ID_miembro` int NOT NULL,
   `estado_inscripcion` tinyint(1) NOT NULL,
   `ID_membresia` int NOT NULL,
-  `ID_cliente` int NOT NULL
+  `ID_cliente` int NOT NULL,
+  `fecha_vencimiento` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `miembros`
+--
+
+INSERT INTO `miembros` (`ID_miembro`, `estado_inscripcion`, `ID_membresia`, `ID_cliente`, `fecha_vencimiento`) VALUES
+(1, 1, 1, 5, '2023-12-02'),
+(2, 1, 1, 2, '2023-12-02'),
+(3, 1, 1, 3, '2023-12-02');
 
 -- --------------------------------------------------------
 
@@ -167,6 +236,14 @@ CREATE TABLE `productos` (
   `precio` decimal(10,2) NOT NULL,
   `cantidad_stock` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `productos`
+--
+
+INSERT INTO `productos` (`ID_producto`, `nombre_producto`, `descripcion`, `precio`, `cantidad_stock`) VALUES
+(1, 'Proteina', 'Proteina de calidad', 150.00, 2),
+(2, 'Trembolona', 'Pa ser más fuertes', 500.00, 4);
 
 -- --------------------------------------------------------
 
@@ -200,6 +277,15 @@ CREATE TABLE `venta` (
   `ID_cliente` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `venta`
+--
+
+INSERT INTO `venta` (`ID_venta`, `fecha_pago`, `metodo_pago`, `ID_cliente`) VALUES
+(1, '2023-12-02', 'efectivo', 1),
+(2, '2023-12-02', 'efectivo', 7),
+(3, '2023-12-02', 'tarjeta', 7);
+
 -- --------------------------------------------------------
 
 --
@@ -222,10 +308,11 @@ CREATE TABLE `_prisma_migrations` (
 --
 
 INSERT INTO `_prisma_migrations` (`id`, `checksum`, `finished_at`, `migration_name`, `logs`, `rolled_back_at`, `started_at`, `applied_steps_count`) VALUES
-('6ec6b52f-6f54-4279-89b6-667a52eb40c3', '0f78f90b97b82b6e35d8d5fea59152e4cbdc3ee44f6ce4491b8f28991589fc6c', '2023-11-20 18:12:59.763', '20231120181259_edit_login', NULL, NULL, '2023-11-20 18:12:59.745', 1),
-('6ec81548-ca4a-47a4-95c0-5f508267b63d', 'c6ac1e86b3a9f36ccdd1420f9da5da3e8165956e9b0ceafdb98bceb5408384dd', '2023-11-20 18:01:32.487', '20231120180132_login', NULL, NULL, '2023-11-20 18:01:32.472', 1),
-('ad220dbe-d3df-4526-a174-7280ab55468f', '566cc00f3999592c2ddcb817b635deceb6cb58c4343ccc21ac22a06b012f3eaf', '2023-11-19 04:38:33.666', '20231031182451_refactor', NULL, NULL, '2023-11-19 04:38:33.630', 1),
-('c583108d-826e-48b8-afdc-0fbe1c012053', '66ba2aeba5b7c970bc694454621d9a6b79f39effdf6afbcfe176baea1c08f3bd', '2023-11-19 04:38:33.629', '20231030021413_init', NULL, NULL, '2023-11-19 04:38:33.358', 1);
+('0c51b0e8-b44d-459f-ba34-da29e9be2e37', '3de8759f32fe5074ebadcc2139476a96f0361a93841432eaa80da6eb12fd3a42', '2023-12-02 15:21:47.122', '20231120180132_login', NULL, NULL, '2023-12-02 15:21:47.109', 1),
+('28b3aaa5-75eb-490a-9cc9-151765815b52', 'd5a18f8d2d413ded98bdbda7c25340bcc2ff9e5a002006e2ff0c4150f066733f', '2023-12-02 15:21:47.048', '20231030021413_init', NULL, NULL, '2023-12-02 15:21:46.620', 1),
+('9ca723e4-9d03-4b4a-8148-7fd95f59bf08', 'f8161d04a9872b79f150cb86c6371ca80127792b101d3a46907820239d5196a8', '2023-12-02 15:21:47.107', '20231031182451_refactor', NULL, NULL, '2023-12-02 15:21:47.050', 1),
+('eadaa509-cde1-41e3-aa12-a217789d6fce', '2f890eb191d74ab7ecf209f8afde5e358904847dd355bcdacce2ef55c32b2a31', '2023-12-02 15:21:47.183', '20231202143126_add_fech_vencimiento_miembros', NULL, NULL, '2023-12-02 15:21:47.150', 1),
+('f2a2ce9b-a3be-4c4e-8405-8788a089698c', '5f00a0193d5246f8b5438c220ad8bbbd44d5bb26cb0eecbaf62695d0ae913fcd', '2023-12-02 15:21:47.148', '20231120181259_edit_login', NULL, NULL, '2023-12-02 15:21:47.125', 1);
 
 --
 -- Índices para tablas volcadas
@@ -341,49 +428,49 @@ ALTER TABLE `_prisma_migrations`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `ID_cliente` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ID_cliente` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `detalles_venta`
 --
 ALTER TABLE `detalles_venta`
-  MODIFY `ID_detalle_venta` int NOT NULL AUTO_INCREMENT;
+  MODIFY `ID_detalle_venta` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `enseña_en`
 --
 ALTER TABLE `enseña_en`
-  MODIFY `ID_enseña_en` int NOT NULL AUTO_INCREMENT;
+  MODIFY `ID_enseña_en` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `horarios`
 --
 ALTER TABLE `horarios`
-  MODIFY `ID_horario` int NOT NULL AUTO_INCREMENT;
+  MODIFY `ID_horario` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `inscripciones`
 --
 ALTER TABLE `inscripciones`
-  MODIFY `ID_inscripcion` int NOT NULL AUTO_INCREMENT;
+  MODIFY `ID_inscripcion` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `instructores`
 --
 ALTER TABLE `instructores`
-  MODIFY `ID_instructor` int NOT NULL AUTO_INCREMENT;
+  MODIFY `ID_instructor` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `membresias`
 --
 ALTER TABLE `membresias`
-  MODIFY `ID_membresia` int NOT NULL AUTO_INCREMENT;
+  MODIFY `ID_membresia` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `miembros`
 --
 ALTER TABLE `miembros`
-  MODIFY `ID_miembro` int NOT NULL AUTO_INCREMENT;
+  MODIFY `ID_miembro` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `pago_membresias`
@@ -395,7 +482,7 @@ ALTER TABLE `pago_membresias`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `ID_producto` int NOT NULL AUTO_INCREMENT;
+  MODIFY `ID_producto` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
@@ -407,7 +494,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `ID_venta` int NOT NULL AUTO_INCREMENT;
+  MODIFY `ID_venta` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
