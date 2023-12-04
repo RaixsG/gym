@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { PrismaClient } from '@prisma/client';
-import { Router } from 'express';
+import e, { Router } from 'express';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -11,12 +11,25 @@ router.get('/clientes', async (_, res) => {
     res.json(allClientes);
 });
 
+router.get('/clientes/sininscripcion', async (_, res) => {
+    const clientesSinInscripcion = await prisma.clientes.findMany({
+        where: {
+            inscripciones: {
+                none: {},
+            },
+        },
+    });
+    res.json(clientesSinInscripcion);
+});
+
 //  Clientes ultimos mes actualmente ✅ (Con datos filtrados a mostrar)
 router.get('/inscripciones/ultimosmes', async (_, res) => {
     const primer_dia_mes = dayjs().startOf('month').format('YYYY-MM-DD');
     const inscripcionesUltimoMes = await prisma.inscripciones.findMany({
         where: {
-            fecha_inscripcion: new Date(primer_dia_mes).toISOString(),
+            fecha_inscripcion: {
+                gte: new Date(primer_dia_mes).toISOString()
+            },
         },
         select: {
             ID_cliente: true,
@@ -38,17 +51,40 @@ router.post('/clientes/create', async (req, res) => {
     if (!nombre || !apellido || !direccion || !telefono || !email || !fecha_nacimiento) {
         return res.status(400).json({ error: 'Falta uno o más campos requeridos' });
     };
-    const cliente = await prisma.clientes.create({
-        data: {
-            nombre,
-            apellido,
-            direccion,
-            telefono,
-            email,
-            fecha_nacimiento: new Date(fecha_nacimiento).toISOString(),
+
+    // Si existe el telefono, no se puede crear el cliente
+    const existeTelefono = await prisma.clientes.findUnique({
+        where: {
+            telefono: telefono,
         },
     });
-    res.json(cliente);
+    // Si existe el email, no se puede crear el cliente
+    const existeEmail = await prisma.clientes.findUnique({
+        where: {
+            email: email,
+        },
+    });
+    if (!existeTelefono && !existeEmail) {
+        // Formatear fecha de nacimiento
+        let fecha_nacimiento_sinFormat = dayjs(fecha_nacimiento).format('YYYY-MM-DD');
+        let fecha_nacimiento_conFormat = dayjs(fecha_nacimiento_sinFormat).toISOString();
+
+        // Crear cliente
+        const cliente = await prisma.clientes.create({
+            data: {
+                nombre,
+                apellido,
+                direccion,
+                telefono,
+                email,
+                fecha_nacimiento: fecha_nacimiento_conFormat,
+            },
+        });
+        res.json(cliente);
+    } else {
+        res.status(400).json({ error: 'Ya existe un cliente con ese número de telefono o email' });
+    }
+
 });
 
 // Traer un cliente por ID ✅
@@ -75,10 +111,11 @@ router.get('/clientes/:id', async (req, res) => {
 // Editar datos de cliente ✅
 router.put('/clientes/edit/:id', async (req, res) => {
     const { id } = req.params;
-    const { nombre, apellido, direccion, telefono, email, fecha_nacimiento } = req.body;
     if (!id) {
         return res.status(400).json({ error: 'Falta el ID del cliente' });
     }
+    const { nombre, apellido, direccion, telefono, email, fecha_nacimiento } = req.body;
+
     // Crear un objeto con los datos a actualizar
     let data = {};
     if (nombre) data.nombre = nombre;
@@ -100,28 +137,23 @@ router.put('/clientes/edit/:id', async (req, res) => {
     }
 });
 
-// Eliminar un cliente ✅
 router.delete('/clientes/delete/:id', async (req, res) => {
     const { id } = req.params;
     if (!id) {
         return res.status(400).json({ error: 'Falta el ID del cliente' });
     }
-    const inscripcionEliminada = await prisma.inscripciones.deleteMany({
+    const clienteEliminado = await prisma.clientes.delete({
         where: {
             ID_cliente: parseInt(id),
         },
     });
-    const clienteEliminado = await prisma.clientes.delete({
-        where: { 
-            ID_cliente: parseInt(id),
-        },
-    });
-    if (clienteEliminado && inscripcionEliminada) {
+
+    if (clienteEliminado) {
         res.status(200).json(clienteEliminado);
-        res.status(200).json(inscripcionEliminada);
     } else {
         res.status(404).json({ error: 'Cliente no encontrado' });
     }
 });
+
 
 export default router;

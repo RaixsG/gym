@@ -1,49 +1,51 @@
 <script>
     import axios from "axios";
-    import { goto } from "$app/navigation"
-    import { appStatus } from "$stores"
+    import { goto } from "$app/navigation";
+    import { appStatus } from "$stores";
+
     let user = null;
     let password = null;
 
     const url = "http://localhost:3000/api/login";
 
     const doLogin = () => {
-        console.log(`Make API login request with following data: { user: ${user}, password: ${password} }`)
+        console.log(
+            `Make API login request with following data: { user: ${user}, password: ${password} }`,
+        );
         axios
             .post(url, {
                 usuario: user,
-                password: password
+                password: password,
             })
-            .then(res => {
+            .then((res) => {
                 console.log(res.data);
-                console.log('EXITO');
+                console.log("EXITO");
                 localStorage.setItem("appStatus", "auth");
                 appStatus.set("auth");
                 localStorage.setItem("user", JSON.stringify(res.data.user));
-                goto('/');
+                goto("/");
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(JSON.stringify(err));
                 alert("Usuario o contraseña incorrectos");
             });
     };
-
 </script>
 
 <div class="login wrap">
     <div class="h1">Inicio de Sesión</div>
-    <form on:submit={ doLogin }>
-        <input 
+    <form on:submit={doLogin}>
+        <input
             placeholder="User"
             type="text"
             name="user"
-            on:change={ e => user = e.target.value }
+            on:change={(e) => (user = e.target.value)}
         />
         <input
             placeholder="Password"
             type="password"
             name="password"
-            on:change={ e => password = e.target.value }
+            on:change={(e) => (password = e.target.value)}
         />
         <button class="btn" type="submit">Login</button>
     </form>
@@ -53,10 +55,10 @@
     .login {
         width: 340px;
         height: 400px;
-        background: #2c2c2c;
+        background-color: var(--toggle-color);
         padding: 47px;
         padding-bottom: 57px;
-        color: #fff;
+        color: var(--text-color);
         border-radius: 17px;
         padding-bottom: 50px;
         font-size: 1.3em;
@@ -74,7 +76,7 @@
         margin: 20px 0 0 0;
         font-size: 0.8em;
         border-radius: 100px;
-        background: #3c3c3c;
+        background: var(--text-color);
         color: #fff;
     }
 
@@ -102,6 +104,7 @@
         display: block;
         margin-bottom: -0px;
         font-size: 1.3em;
+        text-align: center;
     }
 
     .btn {

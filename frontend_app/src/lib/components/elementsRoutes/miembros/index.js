@@ -1,0 +1,1 @@
+export { default as EditMiembros } from './EditMiembro.svelte';

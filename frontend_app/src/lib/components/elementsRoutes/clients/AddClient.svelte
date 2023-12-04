@@ -1,6 +1,9 @@
 <script>
     import axios from "axios";
+    import dayjs from "dayjs";
     import { modalStore } from "../../../../store/modal.js";
+
+    export let addClient;
 
     const cerrarModal = () => {
         modalStore.set({ showModal: false });
@@ -14,10 +17,9 @@
     let email = null;
     let fechaNacimiento = null;
 
-    const url = "http://localhost:3000/api/clientes/create";
-
+    
     const createClient = () => {
-        console.log(fechaNacimiento); // Formato: 2021-09-01
+        const url = "http://localhost:3000/api/clientes/create";
         axios
             .post(url, {
                 nombre: nombre,
@@ -28,15 +30,56 @@
                 fecha_nacimiento: fechaNacimiento,
             })
             .then(res => {
-                console.log(res.data);
                 console.log('EXITO');
+                const newUserData = {
+                    id: res.data.ID_cliente,
+                    nombre: res.data.nombre,
+                    apellido: res.data.apellido,
+                    direccion: res.data.direccion,
+                    telefono: res.data.telefono,
+                    email: res.data.email,
+                    fecha_nacimiento: dayjs(res.data.fechaNacimiento).format("DD-MM-YYY"),
+                }
+                addClient(newUserData);
+                // getTodosClientes();
                 cerrarModal();
             })
             .catch(err => {
                 console.log(JSON.stringify(err));
-                alert("Error al agregar cliente");
             });
     };
+
+    // Consultar clientes
+    // const getTodosClientes = () => {
+    //     const url = "http://localhost:3000/api/clientes/sininscripcion";
+    //     axios
+    //         .get(url)
+    //         .then((response) => {
+    //             const filter = response.data;
+    //             clients = filter.map((item) => {
+    //                 let fecha = dayjs
+    //                     .utc(item.fecha_nacimiento)
+    //                     .format("DD/MM/YYYY");
+    //                 let id = item.ID_cliente;
+    //                 return {
+    //                     id: id,
+    //                     nombre: item.nombre,
+    //                     apellido: item.apellido,
+    //                     direccion: item.direccion,
+    //                     telefono: item.telefono,
+    //                     correo: item.email,
+    //                     fecha_nacimiento: fecha,
+    //                 };
+    //             });
+    //         })
+    //         .catch((error) =>
+    //             alert(
+    //                 `Error en la peticion de clientes: ${JSON.stringify(
+    //                     error,
+    //                 )}`,
+    //             ),
+    //         );
+    // }
 </script>
 
 <form method="dialog" on:submit={createClient}>
@@ -148,4 +191,5 @@
         display: flex;
         justify-content: space-between;
     }
+
 </style>

@@ -56,7 +56,7 @@ model horarios {
 model inscripciones {
   ID_inscripcion    Int       @id @unique(map: "ID_inscripcion") @default(autoincrement())
   fecha_inscripcion DateTime  @db.Date
-  ID_cliente        Int
+  ID_cliente        Int       
   ID_ense_a_en      Int       @map("ID_enseña_en")
   clientes          clientes  @relation(fields: [ID_cliente], references: [ID_cliente], onDelete: NoAction, onUpdate: NoAction, map: "inscripciones_ibfk_1")
   ense_a_en         ense_a_en @relation(fields: [ID_ense_a_en], references: [ID_ense_a_en], onDelete: NoAction, onUpdate: NoAction, map: "inscripciones_ibfk_2")
@@ -89,6 +89,7 @@ model membresias {
 model miembros {
   ID_miembro         Int               @id @unique(map: "ID_miembro") @default(autoincrement())
   estado_inscripcion Boolean
+  fecha_vencimiento  DateTime          @db.Date
   ID_membresia       Int
   ID_cliente         Int
   membresias         membresias        @relation(fields: [ID_membresia], references: [ID_membresia], onDelete: NoAction, onUpdate: NoAction, map: "miembros_ibfk_1")
@@ -131,7 +132,7 @@ model venta {
 }
 
 model users {
-  id       Int      @id @default(autoincrement())
-  username String   @unique @db.VarChar(30)
-  password String   @db.VarChar(30)
+  id       Int    @id @default(autoincrement())
+  username String @unique @db.VarChar(30)
+  password String @db.VarChar(30)
 }

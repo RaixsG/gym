@@ -7,44 +7,44 @@
     </li>
     <li>
         <a href="/clients">
-            <i class="bx bx-heart" />
+            <i class='bx bx-user' ></i>
             <p class="text nav-text">Clientes</p>
         </a>
     </li>
     <li>
         <a href="/instructor">
-            <i class="bx bx-heart" />
+            <i class='bx bx-user-pin' ></i>
             <p class="text nav-text">Instructores</p>
         </a>
     </li>
     <li>
-        <a href="#">
-            <i class="bx bx-wallet" />
-            <p class="text nav-text">Pagar</p>
+        <a href="/ventas">
+            <i class='bx bx-shopping-bag' ></i>
+            <p class="text nav-text">Ventas</p>
         </a>
     </li>
     <li>
-        <a href="#">
-            <i class="bx bx-pie-chart-alt" />
+        <a href="/membresias">
+            <i class='bx bx-id-card' ></i>
             <p class="text nav-text">Tipos de Membresias</p>
         </a>
     </li>
     <li>
-        <a href="#">
-            <i class="bx bx-pie-chart-alt" />
+        <a href="/producto">
+            <i class='bx bx-purchase-tag-alt' ></i>
             <p class="text nav-text">Productos</p>
         </a>
     </li>
     <li>
-        <a href="#">
-            <i class="bx bx-bell" />
+        <a href="/horarios">
+            <i class='bx bx-calendar-plus' ></i>
             <p class="text nav-text">Horarios</p>
         </a>
     </li>
     <li>
-        <a href="#">
-            <i class="bx bx-bar-chart-alt-2" />
-            <p class="text nav-text">Horarios de Clientes</p>
+        <a href="/miembros">
+            <i class='bx bx-calendar-event' ></i>
+            <p class="text nav-text">Horarios de Miembros</p>
         </a>
     </li>
 </ul>

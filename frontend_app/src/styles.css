@@ -117,11 +117,12 @@ em {
 
 /*? Configuramos la tipografía para toda la web */
 body {
+    background-image: url(assets/img/gym_adentro.jpg);
     min-height: 100vh;
     font-size: 100%;
     font-family: var(--primary-fonts);
     color: var(--text-color);
-    background-color: var(--background-color);
+    /* background-color: var(--background-color); */
     line-height: 1.4em;
     -webkit-hyphens: auto;
     -ms-hyphens: auto;

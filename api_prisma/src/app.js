@@ -4,6 +4,12 @@ import cors from 'cors'; // Importamos cors
 import clientesRoutes from './routes/clientes/clientes.routes.js';
 import instructoresRoutes from './routes/instructores/instructores.routes.js';
 import loginRoutes from './routes/login/login.routes.js';
+import productoRoutes from './routes/productos/productos.routes.js';
+import membresiaRoute from './routes/membresia/membresia.routes.js'
+import horarioRoute from './routes/horarios/horarios.routes.js';
+import ventasRoutes from './routes/ventas/ventas.routes.js';
+import inscripcionesRoutes from './routes/inscripciones/inscripciones.routes.js';
+import horarioInstructoresRoutes from './routes/enseña_en/ense_a_en.routes.js';
 
 const app = express(); // Instanciamos express
 // const cors = require('cors');
@@ -30,6 +36,10 @@ app.get('/api', (_, res)   => {
 app.use('/api', clientesRoutes);
 app.use('/api', instructoresRoutes);
 app.use('/api', loginRoutes);
-
-
+app.use('/api', productoRoutes);
+app.use('/api', membresiaRoute);
+app.use('/api', horarioRoute);
+app.use('/api', ventasRoutes);
+app.use('/api', inscripcionesRoutes);
+app.use('/api', horarioInstructoresRoutes);
 

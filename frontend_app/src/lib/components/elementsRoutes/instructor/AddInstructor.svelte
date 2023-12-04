@@ -1,48 +1,121 @@
 <script>
-    import { modalStore } from '../../../../store/modal.js';
+    import axios from "axios";
+    import { modalStore } from "../../../../store/modal.js";
+
+    export let addInstructor;
 
     const cerrarModal = () => {
         modalStore.set({ showModal: false });
     };
+
+    // ENTRADA DE DATOS
+    let form = {
+        nombre: null,
+        apellido: null,
+        direccion: null,
+        telefono: null,
+        email: null,
+        fecha_nacimiento: null,
+        especializacion: null,
+        foto_instructor: null,
+    }
+
+    const url = "http://localhost:3000/api/instructores/create";
+
+    const createInstructor = () => {
+        axios
+            .post(url, form)
+            .then((res) => {
+                const newUserData = {
+                    id: res.data.ID_instructor,
+                    nombre: res.data.nombre,
+                    apellido: res.data.apellido,
+                    direccion: res.data.direccion,
+                    telefono: res.data.telefono,
+                    email: res.data.email,
+                    fecha_nacimiento: res.data.fecha_nacimiento,
+                    especializacion: res.data.especializacion,
+                    foto: res.data.foto_instructor,
+                }
+                addInstructor(newUserData);
+                console.log("EXITO");
+                cerrarModal();
+            })
+            .catch((err) => {
+                console.log(JSON.stringify(err));
+            });
+    };
 </script>
 
-<form method="dialog">
+<form method="dialog" on:submit={createInstructor}>
     <h1>Nuevo Instructor</h1>
     <label>
         Nombre:
-        <input type="text" name="nombre" />
+        <input
+            type="text"
+            name="nombre"
+            on:change={(e) => (form.nombre = e.target.value)}
+        />
     </label>
     <label>
         Apellido:
-        <input type="text" name="apellido" />
+        <input
+            type="text"
+            name="apellido"
+            on:change={(e) => (form.apellido = e.target.value)}
+        />
     </label>
     <label>
         Dirección:
-        <input type="text" name="direccion" />
+        <input
+            type="text"
+            name="direccion"
+            on:change={(e) => (form.direccion = e.target.value)}
+        />
     </label>
     <label>
         Teléfono:
-        <input type="tel" name="telefono" />
+        <input
+            type="tel"
+            name="telefono"
+            on:change={(e) => (form.telefono = e.target.value)}
+        />
     </label>
     <label>
         Correo electrónico:
-        <input type="email" name="email" />
+        <input
+            type="email"
+            name="email"
+            on:change={(e) => (form.email = e.target.value)}
+        />
     </label>
     <label>
         Fecha de nacimiento:
-        <input type="date" name="fechaNacimiento" />
+        <input
+            type="date"
+            name="fechaNacimiento"
+            on:change={(e) => (form.fecha_nacimiento = e.target.value)}
+        />
     </label>
     <label>
         Especialización:
-        <input type="text" name="especializacion" />
+        <input
+            type="text"
+            name="especializacion"
+            on:change={(e) => (form.especializacion = e.target.value)}
+        />
     </label>
     <label>
         Foto:
-        <input type="file" name="foto" />
+        <input
+            type="file"
+            name="foto"
+            on:change={(e) => (form.foto_instructor = e.target.value)}
+        />
     </label>
     <div class="buttons">
         <button type="submit">Agregar</button>
-        <button type="button" on:click={ cerrarModal } >Cancelar</button>
+        <button type="button" on:click={cerrarModal}>Cancelar</button>
     </div>
 </form>
 

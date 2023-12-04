@@ -1,5 +1,8 @@
 <script>
     import { modalStore } from "../../../../store/modal";
+    import { createEventDispatcher } from 'svelte';
+
+    const dispatch = createEventDispatcher();
 
     // Data
     export let headers = [];
@@ -24,15 +27,18 @@
     }
 
     // **ACCIONS BUTTONS**
-    const editarCliente = (id) => {
+    const editarDato = (id) => {
         let user = paginatedData.find((user) => user.id === id);
-        console.log(user);
-        modalStore.set({ showModal: true , component: "EditClient" });
-        console.log("Editar Cliente");
+        console.log(paginatedData);
+        modalStore.set({ showModal: true , component: "EditClient", data: user });
     };
 
-    const eliminarCliente = () => {
-        console.log("Eliminar Cliente");
+    const eliminarDato = (id) => {
+        if (window.confirm("¿Estas seguro de eliminar este dato?")) {
+            console.log("Eliminar Dato", id);
+            data = data.filter(item => item.id !== id);
+            dispatch("delete", id);
+        }
     };
 </script>
 
@@ -52,8 +58,12 @@
                     <td class="data-center">{cell}</td>
                 {/each}
                 <td class="buttons-actions">
-                    <button on:click={editarCliente(row.id)}>Edit</button>
-                    <button on:click={eliminarCliente}>Delete</button>
+                    <button class="buttons-actions_icons" on:click={() => editarDato(row.id)}>
+                        <i class='bx bx-pencil' ></i>
+                    </button>
+                    <button class="buttons-actions_icons" on:click={()=> eliminarDato(row.id)}>
+                        <i class='bx bx-x-circle' ></i>
+                    </button>
                 </td>
             </tr>
         {/each}
@@ -136,6 +146,12 @@
 
     .data-center {
         text-align: center;
+    }
+
+    .buttons-actions_icons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     
 </style>

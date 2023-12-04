@@ -20,7 +20,6 @@
         left: 0;
         width: 100%;
         height: 100vh;
-        background-color: var(--sidebar-color);
         color: var(--text-color);
     }
 
@@ -28,6 +27,8 @@
         display: flex;
         justify-content: center;
         padding-top: 20px;
+
+        font-size: 2rem;
     }
 
     article {

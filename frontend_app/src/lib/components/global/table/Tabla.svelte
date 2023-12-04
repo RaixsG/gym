@@ -83,6 +83,7 @@
         width: 100%;
         border-collapse: collapse;
         transition: var(--tran-02);
+        text-align: center;
     }
 
     tfoot {

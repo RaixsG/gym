@@ -10,11 +10,14 @@
     // Endpoints
     function getInscripcionesUltimoMes() {
         axios.get(url)
-            .then((response) => { console.log(response.data); data = response.data})
+            .then((response) => {
+                const filter = response.data;
+                console.log(filter);
+            })
             .catch((error) => console.log(`Error en la peticion de inscripciones: ${JSON.stringify(error)}`));
     };
 
-    let headers = ['N° Cliente', 'Nombre', 'Estado', 'Fecha de registro'];
+    let headers = ['ID', 'N° Cliente', 'Nombre', 'Estado', 'Fecha de registro'];
 
     onMount(() => {
         getInscripcionesUltimoMes();
@@ -36,8 +39,6 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        justify-content: center;
-        /* width: 100%; */
     }
 
     div {

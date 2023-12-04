@@ -44,10 +44,12 @@
 <style>
     .app {
         padding-left: 88px;
+        backdrop-filter: brightness(0.5);
+        /* background-image: url('src/assets/img/gym_adentro.jpg'); */
     }
 
     .app-unLogin {
-        background-color: var(--sidebar-color);
+        /* background-color: var(--sidebar-color); */
         display: flex;
         justify-content: center;
         align-items: center;

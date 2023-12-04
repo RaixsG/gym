@@ -1,25 +1,26 @@
 <script>
     import { onMount } from "svelte";
-    import dayjs from 'dayjs';
-    import utc from 'dayjs/plugin/utc';
-    import axios from "axios";
-    import { modalStore } from "../../store/modal";
     import { error } from "@sveltejs/kit";
+    import axios from "axios";
+    import dayjs from "dayjs";
+    import utc from "dayjs/plugin/utc";
+    import { modalStore } from "../../store/modal";
 
     dayjs.extend(utc);
 
     // Components
-    import { 
+    import {
         AddClient,
-        EditClient
+        EditClient,
+        InscribirCliente,
     } from "$lib/components/elementsRoutes/clients";
     import TablaActions from "$lib/components/global/table-actions/TablaActions.svelte";
 
     // Protected route
     let status;
     export function load(e) {
-        if (status === 'unauth') {
-            return error(401, 'Unauthorized');
+        if (status === "unauth") {
+            return error(401, "Unauthorized");
         }
     }
 
@@ -31,8 +32,9 @@
         component = state.component;
     });
 
-    const url = "http://localhost:3000/api/clientes";
+    
     let headers = [
+        "ID",
         "Nombre",
         "Apellido",
         "Dirección",
@@ -40,18 +42,24 @@
         "Correo electrónico",
         "Fecha de nacimiento",
     ];
-    let data = [];
+
+    let clients = [];
+    const addClient = (client) => clients = [ ...clients, client ];
 
     // Endpoint
     function getTodosClientes() {
+        const url = "http://localhost:3000/api/clientes/sininscripcion";
         axios
             .get(url)
             .then((response) => {
                 const filter = response.data;
-                data = filter.map((item) => {
-                    let fecha = dayjs.utc(item.fecha_nacimiento).format('DD/MM/YYYY');
-                    console.log('fecha formateada: ' + fecha);
+                clients = filter.map((item) => {
+                    let fecha = dayjs
+                        .utc(item.fecha_nacimiento)
+                        .format("DD/MM/YYYY");
+                    let id = item.ID_cliente;
                     return {
+                        id: id,
                         nombre: item.nombre,
                         apellido: item.apellido,
                         direccion: item.direccion,
@@ -62,36 +70,73 @@
                 });
             })
             .catch((error) =>
-                console.log(
-                    `Error en la peticion de clientes: ${JSON.stringify(error)}`
-                )
+                alert(
+                    `Error en la peticion de clientes: ${JSON.stringify(
+                        error,
+                    )}`,
+                ),
             );
     }
 
+    const handleDelete = (id) => {
+        let idEliminar = id.detail;
+        console.log("ID Eliminar", idEliminar);
+        const url = `http://localhost:3000/api/clientes/delete/${idEliminar}`;
+        axios
+            .delete(url, {
+                headers: {
+                    ID_cliente: idEliminar,
+                },
+            })
+            .then((res) => {
+                console.log("EXITO");
+            })
+            .catch((err) => {
+                console.log(JSON.stringify(err));
+            });
+    };
+
     onMount(() => {
-        getTodosClientes();
+        getTodosClientes()
     });
 </script>
 
 <div class="contend">
     <article class={`${showModal ? "dialog-activate" : ""}`}>
-        <h1>Client</h1>
+        <h1>Clientes</h1>
         <section class="contend-table">
-            <button
-                class="button-add"
-                on:click={() =>
-                    modalStore.set({ showModal: true, component: "AddClient" })}
-                >Agregar Nuevo Cliente
-            </button>
-            <TablaActions {headers} {data} />
+            <div class="buttons">
+                <button
+                    class="button-add"
+                    on:click={() =>
+                        modalStore.set({
+                            showModal: true,
+                            component: "AddClient",
+                        })}
+                    >Agregar Nuevo Cliente
+                </button>
+                <button
+                    class="button-add"
+                    on:click={() =>
+                        modalStore.set({
+                            showModal: true,
+                            component: "InscribirCliente",
+                            data: clients,
+                        })}
+                    >Inscribir Cliente
+                </button>
+            </div>
+            <TablaActions on:delete={handleDelete} {headers} data={clients} />
         </section>
     </article>
     {#if showModal}
         <dialog>
             {#if component === "AddClient"}
-                <AddClient />
+                <AddClient { addClient } />
             {:else if component === "EditClient"}
                 <EditClient />
+            {:else if component === "InscribirCliente"}
+                <InscribirCliente />
             {/if}
         </dialog>
     {/if}
@@ -112,7 +157,7 @@
         height: 100vh;
         max-height: 100%;
 
-        background-color: var(--sidebar-color);
+        /* background-color: var(--sidebar-color); */
         color: var(--text-color);
     }
 
@@ -177,5 +222,10 @@
     button:disabled {
         background-color: var(--text-color);
         cursor: default;
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: row;
     }
 </style>

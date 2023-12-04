@@ -2,7 +2,6 @@
     //Imports
     import {
         Header,
-        Search,
         ListSections,
         Logout,
         Mode,
@@ -20,7 +19,6 @@
     <Header {handleHidden} />
     <nav class="menu-container">
         <div>
-            <Search />
             <ListSections />
         </div>
         <div>
