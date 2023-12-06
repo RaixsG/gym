@@ -1,5 +1,23 @@
 <script>
-    export let data = [];
+    import { onMount } from "svelte";
+    import axios from "axios";
+
+    let data = [];
+
+    const getInscripcionesUltimoMes = () => {
+        const url = "http://localhost:3000/api/inscripciones/miembros";
+        axios.get(url)
+            .then((response) => {
+                const filter = response.data;
+                // data = filter.map((item) => {
+                //     return {
+                //         fecha: dayjs(item.inscripciones[0].fecha_inscripcion).format("DD/MM/YYYY"),
+                //     };
+                // });
+                console.log(filter);
+            })
+            .catch((error) => console.log(`Error en la peticion de inscripciones: ${JSON.stringify(error)}`));
+    };
 
     let meses = [
         "Enero",
@@ -28,18 +46,20 @@
         "brown",
         "gray",
         "black",
-        "white"
-  ];
+        "white",
+    ];
+
+    // console.log(data);
 
     let conteoMeses = Array(12).fill(0); //
     // console.log(conteoMeses);
     data.forEach((item) => {
-        let partesFecha = item["Fecha de registro"].split("/"); // Separar la fecha de registro en partes
+        let partesFecha = item.fecha.split("/"); // Separar la fecha de registro en partes
         // console.log(partesFecha)
         let fechaRegistro = new Date(
             partesFecha[2],
             partesFecha[1] - 1,
-            partesFecha[0]
+            partesFecha[0],
         ); // Crear un objeto Date a partir de la fecha de registro
         // console.log(fechaRegistro);
         let mes = fechaRegistro.getMonth(); // Obtener el mes (0-11) de la fecha de registro
@@ -49,12 +69,22 @@
     });
 
     let data_length = meses.map((mes, i) => ({ mes, count: conteoMeses[i] })); // Crear el array data_length a partir de los conteos de meses
+
+    onMount(() => {
+        getInscripcionesUltimoMes();
+    });
 </script>
 
 {#each data_length as item, i (item.mes)}
-<div class="bar" style="width: {item.count}%; background-color: {colores[i % colores.length]}" title="{item.mes}: {item.count}">
-    <div>{item.mes}</div>
-  </div>
+    <div
+        class="bar"
+        style="width: {item.count}%; background-color: {colores[
+            i % colores.length
+        ]}"
+        title="{item.mes}: {item.count}"
+    >
+        <div>{item.mes}</div>
+    </div>
 {/each}
 
 <style>

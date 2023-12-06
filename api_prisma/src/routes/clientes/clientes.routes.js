@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { PrismaClient } from '@prisma/client';
-import e, { Router } from 'express';
+import { Router } from 'express';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -28,7 +28,7 @@ router.get('/inscripciones/ultimosmes', async (_, res) => {
     const inscripcionesUltimoMes = await prisma.inscripciones.findMany({
         where: {
             fecha_inscripcion: {
-                gte: new Date(primer_dia_mes).toISOString()
+                gte: dayjs(primer_dia_mes).toISOString(),
             },
         },
         select: {

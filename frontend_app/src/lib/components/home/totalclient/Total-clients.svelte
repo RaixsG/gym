@@ -3,21 +3,29 @@
     import BarGraphics from "$lib/components/global/Bar-graphics.svelte";
     import { onMount } from "svelte";
     import axios from "axios";
+    import dayjs from "dayjs";
 
-    const url = "http://localhost:3000/api/inscripciones/ultimosmes";
     let data = [];
-
+    
     // Endpoints
     function getInscripcionesUltimoMes() {
+        const url = "http://localhost:3000/api/inscripciones/miembros";
         axios.get(url)
             .then((response) => {
                 const filter = response.data;
-                console.log(filter);
+                data = filter.map((item) => {
+                    return {
+                        id: item.ID_cliente,
+                        nombre: item.nombre,
+                        estado: item.miembros.map((item) => item.estado_inscripcion),
+                        fecha: dayjs(item.inscripciones[0].fecha_inscripcion).format("DD/MM/YYYY"),
+                    };
+                });
             })
             .catch((error) => console.log(`Error en la peticion de inscripciones: ${JSON.stringify(error)}`));
     };
 
-    let headers = ['ID', 'N° Cliente', 'Nombre', 'Estado', 'Fecha de registro'];
+    let headers = ['ID', 'Nombre', 'Estado', 'Fecha de registro'];
 
     onMount(() => {
         getInscripcionesUltimoMes();
@@ -30,7 +38,7 @@
     <Tabla { headers } { data } />
     <h2>Clientes por Mes</h2>
     <div>
-        <BarGraphics { data } />
+        <BarGraphics />
     </div>
 </section>
 

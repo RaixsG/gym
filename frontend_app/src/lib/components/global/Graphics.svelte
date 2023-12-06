@@ -18,15 +18,15 @@
       .get(url)
       .then((response) => {
         const filter = response.data;
-        console.log(filter);
+        // console.log(filter);
         productos_completos = filter.map((item) => {
           return item.cantidad;
         });
-        console.log(productos_completos);
+        // console.log(productos_completos);
         nombresProductos = filter.map((nombres) => {
           return nombres.nombre_producto;
         });
-        console.log(nombresProductos);
+        // console.log(nombresProductos);
         productosMasVendidos = productos_completos.slice();
       })
       .catch((err) => {
