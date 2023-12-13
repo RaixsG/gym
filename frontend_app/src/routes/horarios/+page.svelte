@@ -52,11 +52,9 @@
                     let horaInicio = dayjs
                         .utc(item.hora_inicio)
                         .format("HH:mm");
-                    console.log("hora formateada: " + horaInicio);
                     let horaFin = dayjs
                         .utc(item.hora_finalizacion)
                         .format("HH:mm");
-                    console.log("hora formateada: " + horaFin);
                     return {
                         id: item.ID_horario,
                         inicio: horaInicio,
@@ -74,6 +72,27 @@
             );
     }
 
+    // Delete
+    const handleDelete = (id) => {
+        let idEliminar = id.detail;
+        console.log("ID Eliminar", idEliminar);
+        const url = `http://localhost:3000/api/horarios/delete/${idEliminar}`;
+        axios
+            .delete(url, {
+                headers: {
+                    ID_horario: idEliminar,
+                },
+            })
+            .then((res) => {
+                alert("Horario eliminado correctamente");
+                getTodosHorarios();
+            })
+            .catch((err) => {
+                console.log(JSON.stringify(err));
+                alert("Error al eliminar horario");
+            });
+    };
+
     onMount(() => {
         getTodosHorarios();
     });
@@ -90,7 +109,7 @@
                     modalStore.set({ showModal: true, component: "AddHorario" })}
                 >Nuevo Horario
             </button>
-            <TablaActions {headers} {data} />
+            <TablaActions on:delete={handleDelete} {headers} {data} />
         </section>
     </article>
     {#if showModal}

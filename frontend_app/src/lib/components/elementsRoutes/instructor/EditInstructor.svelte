@@ -32,7 +32,7 @@
                 foto_instructor: user.foto,
             })
             .then((res) => {
-                alert(res, 'Instructor actualizado Exitosamente');
+                alert('Instructor actualizado Exitosamente');
                 cerrarModal();
             })
             .catch((err) => {

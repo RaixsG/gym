@@ -54,6 +54,7 @@
         Precio:
         <input
             type="number"
+            step="0.01"
             on:change={(e) => (producto.precio = e.target.value)}
         />
     </label>
@@ -94,9 +95,7 @@
     }
 
     input[type="text"],
-    input[type="tel"],
-    input[type="email"],
-    input[type="date"] {
+    input[type="number"] {
         width: 100%;
         padding: 10px;
         border: 1px solid #ddd;

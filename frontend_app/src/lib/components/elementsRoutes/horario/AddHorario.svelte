@@ -1,6 +1,5 @@
 <script>
     import axios from "axios";
-    import dayjs from "dayjs";
     import { modalStore } from "../../../../store/modal.js";
 
     export let addHorario;
@@ -86,9 +85,7 @@
     }
 
     input[type="text"],
-    input[type="tel"],
-    input[type="email"],
-    input[type="date"] {
+    input[type="time"] {
         width: 100%;
         padding: 10px;
         border: 1px solid #ddd;

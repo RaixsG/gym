@@ -84,6 +84,7 @@
         border-collapse: collapse;
         transition: var(--tran-02);
         text-align: center;
+        table-layout: fixed;
     }
 
     tfoot {

@@ -63,10 +63,13 @@
                     ID_horario: horario,
                 })
                 .then((res) => {
+                    alert("Horario del Modificado");
                     modalStore.set({ showModal: false, data: null });
                     console.log("EXITO");
+                    getInstructoresHorarios();
                 })
                 .catch((err) => {
+                    alert("Error al modificar el horario");
                     console.log(JSON.stringify(err));
                 });
     }
@@ -127,9 +130,7 @@
         margin-bottom: 10px;
     }
 
-    input[type="search"],
-    select,
-    input[type="date"] {
+    select{
         width: 100%;
         padding: 10px;
         border: 1px solid #ddd;

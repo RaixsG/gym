@@ -127,9 +127,31 @@ router.get('/inscripciones/miembros/ultimosmes', async (_, res) => {
     const primer_dia_mes = dayjs().startOf('month').format('YYYY-MM-DD');
     const inscripcionesUltimoMes = await prisma.clientes.findMany({
         where: {
-            
-        }
+            inscripciones: { some: {} },
+            miembros: { some: {} },
+        },
+        include: {
+            inscripciones: {
+                where: {
+                    fecha_inscripcion: {
+                        gte: dayjs(primer_dia_mes).toISOString(),
+                    },
+                },
+                select: {
+                    fecha_inscripcion: true,
+                },
+            },
+            miembros: {
+                where: {
+                    estado_inscripcion: true,
+                },
+                select: {
+                    estado_inscripcion: true,
+                }
+            },
+        },
     })
-})
+    res.status(200).json(inscripcionesUltimoMes);
+});
 
 export default router;

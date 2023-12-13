@@ -9,7 +9,7 @@
     
     // Endpoints
     function getInscripcionesUltimoMes() {
-        const url = "http://localhost:3000/api/inscripciones/miembros";
+        const url = "http://localhost:3000/api/inscripciones/miembros/ultimosmes";
         axios.get(url)
             .then((response) => {
                 const filter = response.data;
@@ -18,9 +18,10 @@
                         id: item.ID_cliente,
                         nombre: item.nombre,
                         estado: item.miembros.map((item) => item.estado_inscripcion),
-                        fecha: dayjs(item.inscripciones[0].fecha_inscripcion).format("DD/MM/YYYY"),
+                        fecha: dayjs(item.inscripciones.map(item => item.fecha_inscripcion)).format("DD/MM/YYYY"),
                     };
                 });
+                console.log(filter);
             })
             .catch((error) => console.log(`Error en la peticion de inscripciones: ${JSON.stringify(error)}`));
     };

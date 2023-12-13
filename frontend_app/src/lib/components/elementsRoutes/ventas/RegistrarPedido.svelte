@@ -5,11 +5,11 @@
     import axios from "axios";
 
     const cerrarModal = () => {
-        modalStore.set({ showModal: false });
+        modalStore.set({ showModal: false, data: salesData});
     };
 
     let productos = get(modalStore).data;
-    console.log(productos);
+    // console.log(productos);
 
     let idClienteSeleccionado = null;
     let metodoPagoSeleccionado = null;
@@ -31,6 +31,8 @@
             });
     };
 
+    let salesData = [];
+    $: console.log(salesData);
     const sendSale = () => {
         const url = "http://localhost:3000/api/ventas/create";
         const body = {
@@ -44,10 +46,11 @@
         axios
             .post(url, body)
             .then(({ data: response}) => {
-                console.log(JSON.stringify(response))
-                cerrarModal();
+                console.log(JSON.stringify(response));
+                salesData = [ ...salesData, response ];
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log(err))
+            .finally(cerrarModal);
     }
     onMount(getClients);
 </script>

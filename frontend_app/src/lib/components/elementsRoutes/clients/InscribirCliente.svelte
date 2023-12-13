@@ -86,7 +86,7 @@
             .get(urlMembresias)
             .then((response) => {
                 const filter = response.data;
-                // console.log(filter)
+                console.log(filter)
                 dataMembresias = filter.map((item) => {
                     return {
                         id: item.ID_membresia,

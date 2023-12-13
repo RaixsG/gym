@@ -1,23 +1,6 @@
 <script>
-    import { onMount } from "svelte";
     import axios from "axios";
-
-    let data = [];
-
-    const getInscripcionesUltimoMes = () => {
-        const url = "http://localhost:3000/api/inscripciones/miembros";
-        axios.get(url)
-            .then((response) => {
-                const filter = response.data;
-                // data = filter.map((item) => {
-                //     return {
-                //         fecha: dayjs(item.inscripciones[0].fecha_inscripcion).format("DD/MM/YYYY"),
-                //     };
-                // });
-                console.log(filter);
-            })
-            .catch((error) => console.log(`Error en la peticion de inscripciones: ${JSON.stringify(error)}`));
-    };
+    import dayjs from "dayjs";
 
     let meses = [
         "Enero",
@@ -49,30 +32,54 @@
         "white",
     ];
 
-    // console.log(data);
+    let data = [];
 
-    let conteoMeses = Array(12).fill(0); //
-    // console.log(conteoMeses);
-    data.forEach((item) => {
-        let partesFecha = item.fecha.split("/"); // Separar la fecha de registro en partes
-        // console.log(partesFecha)
-        let fechaRegistro = new Date(
-            partesFecha[2],
-            partesFecha[1] - 1,
-            partesFecha[0],
-        ); // Crear un objeto Date a partir de la fecha de registro
-        // console.log(fechaRegistro);
-        let mes = fechaRegistro.getMonth(); // Obtener el mes (0-11) de la fecha de registro
-        // console.log(mes);
-        conteoMeses[mes]++; // Incrementar el conteo de clientes en el mes correspondiente
-        // console.log(conteoMeses)
+    const getInscripcionesUltimoMes = async () => {
+        try {
+            const response = await axios.get(
+                "http://localhost:3000/api/inscripciones/miembros",
+            );
+            data = response.data.map((item) => {
+                return {
+                    fecha: dayjs(
+                        item.inscripciones[0].fecha_inscripcion,
+                    ).format("DD/MM/YYYY"),
+                };
+            });
+        } catch (error) {
+            console.log(
+                `Error en la peticion de inscripciones: ${JSON.stringify(
+                    error,
+                )}`,
+            );
+        }
+    };
+
+    getInscripcionesUltimoMes().then(() => {
+        let conteoMeses = Array(12).fill(0); //
+        // console.log(conteoMeses);
+        data.forEach((item) => {
+            let partesFecha = item.fecha.split("/"); // Separar la fecha de registro en partes
+            // console.log(partesFecha)
+            let fechaRegistro = new Date(
+                partesFecha[2],
+                partesFecha[1] - 1,
+                partesFecha[0],
+            ); // Crear un objeto Date a partir de la fecha de registro
+            // console.log(fechaRegistro);
+            let mes = fechaRegistro.getMonth(); // Obtener el mes (0-11) de la fecha de registro
+            // console.log(mes);
+            conteoMeses[mes]++; // Incrementar el conteo de clientes en el mes correspondiente
+            // console.log(conteoMeses)
+        });
+
+        return (data_length = meses.map((mes, i) => ({
+            mes,
+            count: conteoMeses[i],
+        }))); // Crear el array data_length a partir de los conteos de meses
     });
 
-    let data_length = meses.map((mes, i) => ({ mes, count: conteoMeses[i] })); // Crear el array data_length a partir de los conteos de meses
-
-    onMount(() => {
-        getInscripcionesUltimoMes();
-    });
+    let data_length = [];
 </script>
 
 {#each data_length as item, i (item.mes)}

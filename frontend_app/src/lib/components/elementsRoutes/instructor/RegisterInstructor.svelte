@@ -11,8 +11,6 @@
     let data = get(modalStore).data;
     // ENTRADA DE DATOS
     let instructores = data; //Lista de todos los instructores
-    console.log(instructores);
-
 
     let instructorSeleccionado = null;
     let busqueda = '';
@@ -40,8 +38,8 @@
                 ID_horario: horario.id,
             })
             .then(res => {
-                console.log(res.data);
                 console.log('EXITO');
+                alert('Inscripción agregado con éxito');
                 cerrarModal();
             })
             .catch(err => {
@@ -59,7 +57,6 @@
                 const filter = response.data;
                 dataHorario = filter.map((item) => {
                     let horaInicio = item.hora_inicio;
-                    console.log(dataHorario.horaInicio);
                     return {
                         id: item.ID_horario,
                         horaInicio,

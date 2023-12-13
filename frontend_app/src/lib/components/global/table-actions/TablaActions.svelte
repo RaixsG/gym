@@ -7,6 +7,7 @@
     // Data
     export let headers = [];
     export let data = [];
+    console.log(data)
 
     // Paginación
     let currentPage = 1;
@@ -118,6 +119,7 @@
         width: 100%;
         border-collapse: collapse;
         transition: var(--tran-02);
+        table-layout: fixed;
     }
 
     tfoot {
@@ -140,8 +142,8 @@
     }
 
     .buttons-actions {
-        display: flex;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
     }
 
     .data-center {

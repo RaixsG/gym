@@ -4,18 +4,16 @@
     // Data
     export let headers = [];
     export let data = [];
+    export let deleteProduct;
 
-    const eliminarCliente = () => {
-        console.log("Eliminar Cliente");
-    };
-
-    const ficharPedido = () => {
-        console.log("Fichar Pedido");
+    const eliminarCliente = (id) => {
+        // confirm("¿Estás seguro de eliminar este producto?");
+        deleteProduct(id);
     };
 
 </script>
 
-<table on:submit={ficharPedido}>
+<table>
     <thead>
         <tr>
             {#each headers as header}
@@ -31,7 +29,7 @@
                     <td class="data-center">{cell}</td>
                 {/each}
                 <td class="buttons-actions">
-                    <button class="buttons-actions_icons" on:click={eliminarCliente}>
+                    <button class="buttons-actions_icons" on:click={() => eliminarCliente(row.id)}>
                         <i class='bx bx-x-circle' ></i>
                     </button>
                 </td>
@@ -76,6 +74,7 @@
         width: 100%;
         border-collapse: collapse;
         transition: var(--tran-02);
+        table-layout: fixed;
     }
 
     th,

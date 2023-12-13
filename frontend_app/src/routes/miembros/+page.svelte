@@ -5,6 +5,8 @@
     import dayjs from "dayjs";
     import utc from "dayjs/plugin/utc";
     import { modalStore } from "../../store/modal";
+    import jsPDF from "jspdf";
+    import autoTable from "jspdf-autotable";
 
     dayjs.extend(utc);
 
@@ -12,7 +14,7 @@
     import {
         EditMiembros,
     } from "$lib/components/elementsRoutes/miembros";
-    import TablaActions from "$lib/components/global/table-actions/TablaActions.svelte";
+    import Tabla from "$lib/components/global/table/Tabla.svelte";
 
     // Protected route
     let status;
@@ -33,64 +35,101 @@
     
     let headers = [
         "ID",
-        "Cliente",
+        "Miembro",
         "Teléfono",
         "Horario",
         "Membresía",
-        "Pago Mensual",
+        "Precio Unitario Mensual",
         "Pago Total",
         "Fecha de Inscripción",
         "Fecha de Vencimiento",
         "Estado de Inscripción",
     ];
-    let data = [];
 
-    // Endpoint
-    const getTodosClientes = () => {
-        const url = "http://localhost:3000/api/inscripciones/miembros";
-        axios
-            .get(url)
-            .then((response) => {
-                const filter = response.data;
-                data = filter.map((item) => {
-                    return {
-                        id: item.ID_cliente,
-                        cliente: `${item.nombre} ${item.apellido}`,
-                        telefono: item.telefono,
-                        fecha_inscripcion: dayjs(item.fecha_inscripcion).format("DD/MM/YYYY"),
-                        fecha_vencimiento: dayjs(item.inscripciones.fecha_vencimiento).format("DD/MM/YYYY"),
-                        estado_inscripcion: item.miembros.map(miembro => miembro.estado_inscripcion),
-                    }
-                });
-                console.log(data);
+    // ENDPOINTS
+    // get pago de las membresias
+    let data = [];
+    const getPagoMembresias = () => {
+      const url = "http://localhost:3000/api/membresias/pagadas";
+      axios
+        .get(url)
+        .then((response) => {
+            const filter = response.data;
+            let precioMensual = filter.dataMiembro.membresias.precio;
+            let cantidad = filter.pagos.map((item) => {
+                return item.cantidad;
             })
-            .catch((err) => {
-                console.log(JSON.stringify(err));
+            let precioTotal = parseFloat(precioMensual) * cantidad[0];
+
+            let estado_inscripcion = filter.pagos.map((item) => {
+                return item.miembros.estado_inscripcion;
             });
+
+            if (estado_inscripcion[0] === true) {
+                estado_inscripcion[0] = "Activo";
+            } else if (estado_inscripcion[0] === false) {
+                estado_inscripcion[0] = "Inactivo";
+            }
+
+            data = [{
+                id: filter.dataMiembro.ID_miembro,
+                miembro: `${filter.dataMiembro.clientes.nombre} ${filter.dataMiembro.clientes.apellido}`,
+                telefono: filter.dataMiembro.clientes.telefono,
+                horario: filter.horario.turno,
+                membresia: filter.dataMiembro.membresias.nombre_membresia,
+                precioMensual: filter.dataMiembro.membresias.precio,
+                pagoTotal: precioTotal,
+                fecha_inscripcion: dayjs(filter.inscripcion.map((item) => {return item.fecha_inscripcion})).format("DD/MM/YYYY"),
+                fecha_vencimiento: dayjs(filter.pagos.map((item) => {
+                    return item.miembros.fecha_vencimiento;
+                })).format("DD/MM/YYYY"),
+                estado_inscripcion: estado_inscripcion[0],
+            }];
+        })
     }
 
-    const handleDelete = (id) => {
-        let idEliminar = id.detail;
-        console.log("ID Eliminar", idEliminar);
-        // const url = `http://localhost:3000/api/clientes/delete/${idEliminar}`;
-        // axios
-        //     .delete(url, {
-        //         headers: {
-        //             ID_cliente: idEliminar,
-        //         },
-        //     })
-        //     .then((res) => {
-        //         console.log(res.data);
-        //         console.log("EXITO");
-        //         getTodosClientes();
-        //     })
-        //     .catch((err) => {
-        //         console.log(JSON.stringify(err));
-        //     });
+    const generateReport = (months) => {
+        const filteredData = data.filter(item => {
+            const fecha_inscripcion = new Date(item.fecha_inscripcion);
+            const endDate = new Date();
+            endDate.setMonth(endDate.getMonth() - months);
+            return fecha_inscripcion >= endDate;
+        });
+
+        const doc = new jsPDF();
+        doc.text('Reporte de pago de Membresias', 10, 10);
+        autoTable(doc, {
+            startY: 20,
+            body: filteredData.map(item => [
+                item.id,
+                item.miembro,
+                item.telefono,
+                item.horario,
+                item.membresia,
+                item.precioMensual,
+                item.pagoTotal,
+                item.fecha_inscripcion,
+                item.fecha_vencimiento,
+                item.estado_inscripcion
+            ]),
+            columns: [
+                { header: 'ID', dataKey: 'id' },
+                { header: 'Miembro', dataKey: 'miembro' },
+                { header: 'Telefono', dataKey: 'telefono' },
+                { header: 'Horario', dataKey: 'horario' },
+                { header: 'Membresia', dataKey: 'membresia' },
+                { header: 'Precio Mensual', dataKey: 'precioMensual' },
+                { header: 'Pago Total', dataKey: 'pagoTotal' },
+                { header: 'Fecha Inscripcion', dataKey: 'fecha_inscripcion' },
+                { header: 'Fecha Vencimiento', dataKey: 'fecha_vencimiento' },
+                { header: 'Estado Inscripcion', dataKey: 'estado_inscripcion' }
+            ]
+        });
+        doc.save(`reporte_${months}_meses.pdf`);
     };
 
     onMount(() => {
-        getTodosClientes();
+        getPagoMembresias();
     });
 </script>
 
@@ -99,8 +138,11 @@
         <h1>Miembros</h1>
         <section class="contend-table">
             <div class="buttons">
+                <button on:click={() => generateReport(1)}>Reporte último mes</button>
+                <button on:click={() => generateReport(6)}>Reporte últimos 6 meses</button>
+                <button on:click={() => generateReport(12)}>Reporte anual</button>
             </div>
-            <TablaActions on:delete={handleDelete} {headers} {data} />
+            <Tabla {headers} {data} />
         </section>
     </article>
     {#if showModal}

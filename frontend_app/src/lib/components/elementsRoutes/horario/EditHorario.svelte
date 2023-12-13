@@ -11,17 +11,14 @@
     let user = get(modalStore).data;
 
     // Endpoint
-    const url = `http://localhost:3000/api/clientes/edit/${user.id}`;
-
+    
     const editarCliente = () => {
+        const url = `http://localhost:3000/api/horarios/edit/${user.id}`;
         axios
             .put(url, {
-                nombre: user.nombre,
-                apellido: user.apellido,
-                direccion: user.direccion,
-                telefono: user.telefono,
-                email: user.correo,
-                fecha_nacimiento: new Date(user.fecha_nacimiento).toISOString(),
+                hora_inicio: user.inicio,
+                hora_finalizacion: user.fin,
+                turno: user.turno,
             })
             .then((res) => {
                 alert('Cliente actualizado exitosamente');
@@ -35,47 +32,26 @@
 </script>
 
 <form method="dialog" on:submit={editarCliente}>
-    <h1>Editar Cliente</h1>
+    <h1>Editar Horario</h1>
     <label>
-        Nombre:
+        Hora Inicio:
+        <input 
+            type="time"
+            bind:value={user.inicio}
+        />
+    </label>
+    <label>
+        Hora Fin:
+        <input 
+            type="time"
+            bind:value={user.fin}
+        />
+    </label>
+    <label>
+        Turno:
         <input 
             type="text"
-            bind:value={user.nombre}
-        />
-    </label>
-    <label>
-        Apellido:
-        <input 
-            type="text"
-            bind:value={user.apellido}
-        />
-    </label>
-    <label>
-        Dirección:
-        <input 
-            type="text"
-            bind:value={user.direccion}
-        />
-    </label>
-    <label>
-        Teléfono:
-        <input 
-            type="tel"
-            bind:value={user.telefono}
-        />
-    </label>
-    <label>
-        Correo electrónico:
-        <input
-            type="email"
-            bind:value={user.correo}
-        />
-    </label>
-    <label>
-        Fecha de nacimiento:
-        <input
-            type="date"
-            bind:value={user.fecha_nacimiento}
+            bind:value={user.turno}
         />
     </label>
     <div class="buttons">
@@ -107,9 +83,7 @@
     }
 
     input[type="text"],
-    input[type="tel"],
-    input[type="email"],
-    input[type="date"] {
+    input[type="time"] {
         width: 100%;
         padding: 10px;
         border: 1px solid #ddd;

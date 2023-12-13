@@ -39,6 +39,7 @@
                 }
                 addInstructor(newUserData);
                 console.log("EXITO");
+                alert("Instructor agregado con éxito");
                 cerrarModal();
             })
             .catch((err) => {

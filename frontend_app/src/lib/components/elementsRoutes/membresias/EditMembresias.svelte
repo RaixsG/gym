@@ -83,9 +83,7 @@
     }
 
     input[type="text"],
-    input[type="tel"],
-    input[type="email"],
-    input[type="date"] {
+    input[type="number"] {
         width: 100%;
         padding: 10px;
         border: 1px solid #ddd;

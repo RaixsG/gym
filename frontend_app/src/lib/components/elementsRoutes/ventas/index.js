@@ -1,2 +1,2 @@
-export { default as AddClient } from './RealizarVenta.svelte';
+export { default as PagoMembresia } from './RealizarPedidoMembresia.svelte';
 export { default as RegistrarPedido} from './RegistrarPedido.svelte';

@@ -19,6 +19,8 @@
   "dependencies": {
     "@prisma/client": "^5.5.2",
     "cors": "^2.8.5",
-    "dayjs": "^1.11.10"
+    "dayjs": "^1.11.10",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.0"
   }
 }
