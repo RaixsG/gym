@@ -270,18 +270,20 @@ router.get('/membresias/pagadas', async (_, res) => {
     // Obtenemos la inscripcion mediante el ID del cliente
     const inscripcion = await prisma.inscripciones.findMany({
         where: {
-            ID_cliente: clientes[0].ID_cliente,
+            ID_cliente: clientes.ID_cliente,
         },
         select: {
             ID_inscripcion: true,
             fecha_inscripcion: true,
             ID_ense_a_en: true,
+            ID_cliente: true,
         }
-    })
+    });
 
-    const dataMiembro = await prisma.miembros.findUnique({
+    // Obtenemos los datos del miembro
+    const dataMiembro = await prisma.miembros.findMany({
         where: {
-            ID_miembro: pagos[0].ID_miembro,
+            ID_miembro: pagos.ID_miembro,
         },
         include: {
             clientes: {
@@ -293,12 +295,16 @@ router.get('/membresias/pagadas', async (_, res) => {
             },
             membresias: true,
         },
-    })
+    });
+
+    const membresias = await prisma.membresias.findMany();
+    
     res.status(200).json({
-        dataMiembro,
         pagos,
         inscripcion,
-        horario: horarios.find(horario => horario.ID_horario === inscripcion[0].ID_ense_a_en),
+        horarios,
+        membresias,
+        clientes
     });
 });
 

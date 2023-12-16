@@ -93,6 +93,10 @@
             });
     };
 
+    function recargar () {
+        getTodosHorarios();
+    }
+
     onMount(() => {
         getTodosHorarios();
     });
@@ -115,9 +119,9 @@
     {#if showModal}
         <dialog>
             {#if component === "AddHorario"}
-                <AddHorario { addHorario } />
+                <AddHorario {recargar} { addHorario } />
             {:else if component === "EditClient"}
-                <EditHorario />
+                <EditHorario {recargar} />
             {/if}
         </dialog>
     {/if}

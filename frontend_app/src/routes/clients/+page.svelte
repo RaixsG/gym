@@ -83,11 +83,7 @@
         console.log("ID Eliminar", idEliminar);
         const url = `http://localhost:3000/api/clientes/delete/${idEliminar}`;
         axios
-            .delete(url, {
-                headers: {
-                    ID_cliente: idEliminar,
-                },
-            })
+            .delete(url)
             .then((res) => {
                 console.log("EXITO");
             })
@@ -96,8 +92,12 @@
             });
     };
 
+    function recargar () {
+        getTodosClientes();
+    };
+
     onMount(() => {
-        getTodosClientes()
+        getTodosClientes();
     });
 </script>
 
@@ -134,9 +134,9 @@
             {#if component === "AddClient"}
                 <AddClient { addClient } />
             {:else if component === "EditClient"}
-                <EditClient />
+                <EditClient {recargar} />
             {:else if component === "InscribirCliente"}
-                <InscribirCliente />
+                <InscribirCliente {recargar} />
             {/if}
         </dialog>
     {/if}

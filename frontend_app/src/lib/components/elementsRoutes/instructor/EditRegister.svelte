@@ -6,6 +6,8 @@
     const cerrarModal = () => {
         modalStore.set({ showModal: false, data: null });
     };
+
+    export let recargar;
     // ENTRADA DE DATOS
     let instructores = [];
     // **INSTRUCTORES CON HORAIO**
@@ -67,6 +69,7 @@
                     modalStore.set({ showModal: false, data: null });
                     console.log("EXITO");
                     getInstructoresHorarios();
+                    recargar();
                 })
                 .catch((err) => {
                     alert("Error al modificar el horario");

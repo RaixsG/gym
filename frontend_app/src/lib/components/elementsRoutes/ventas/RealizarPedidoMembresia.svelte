@@ -7,6 +7,8 @@
         modalStore.set({ showModal: false });
     };
 
+    export let recargar;
+
     // Busqueda de miembros
     let busqueda = "";
     let data = get(modalStore).data;
@@ -31,8 +33,9 @@
         axios
             .post(url, body)
             .then((response) => {
-                console.log(response);
+                // console.log(response.data);
                 cerrarModal();
+                recargar();
             })
             .catch((error) => {
                 console.log(error);

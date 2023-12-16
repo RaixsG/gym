@@ -1,6 +1,6 @@
-import dayjs from "dayjs";
 import { PrismaClient } from "@prisma/client";
 import { Router } from "express";
+import dayjs from "dayjs";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -35,8 +35,6 @@ router.post('/instructores/create', async (req, res) => {
 router.put('/instructor/edit/:id', async (req, res) => {
     const { id } = req.params;
     const { nombre, apellido, direccion, telefono, email, fecha_nacimiento, especializacion, foto_instructor } = req.body;
-    let dateTime = dayjs(fecha_nacimiento).format('YYYY-MM-DD');
-    const fecha_nacimiento_format = new Date(dateTime).toISOString(); 
     if (!id) {
         return res.status(400).json({error: 'Falta el ID del instructor' });
     }
@@ -48,7 +46,7 @@ router.put('/instructor/edit/:id', async (req, res) => {
     if (direccion) data.direccion = direccion;
     if (telefono) data.telefono = telefono;
     if (email) data.email = email;
-    if (fecha_nacimiento) data.fecha_nacimiento = fecha_nacimiento_format;
+    if (fecha_nacimiento) data.fecha_nacimiento = fecha_nacimiento;
     if (especializacion) data.especializacion = especializacion;
     if (foto_instructor) data.foto_instructor = foto_instructor;
 

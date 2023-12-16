@@ -28,6 +28,9 @@ router.post('/membresia/create', async (req, res) => {
 // Actualizar membresia
 router.put('/membresia/edit/:id', async (req, res) => {
     const { id } = req.params;
+    if (!id) {
+        return res.status(404).json({ error: 'Falta el ID de la membresia' });
+    }
     const { nombre_membresia, precio, beneficios } = req.body;
     const membresia = await prisma.membresias.update({
         where: { ID_membresia: Number(id) },

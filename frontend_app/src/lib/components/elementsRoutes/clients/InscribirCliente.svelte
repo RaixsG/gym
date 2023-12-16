@@ -9,9 +9,10 @@
     };
 
     let data = get(modalStore).data;
+    export let recargar;
+    
     // ENTRADA DE DATOS
     let clientes = data; //Lista de todos los clientes
-    // console.log(clientes);
 
 
     let clienteSeleccionado = null;
@@ -49,8 +50,10 @@
             .then(res => {
                 console.log('EXITO');
                 cerrarModal();
+                recargar();
             })
             .catch(err => {
+                alert('Error al crear inscripción');
                 console.log(JSON.stringify(err));
             });
     };

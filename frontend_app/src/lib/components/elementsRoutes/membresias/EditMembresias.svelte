@@ -7,13 +7,14 @@
         modalStore.set({ showModal: false, data: null });
     };
 
+    export let recargar;
+
     // Datos a editar
     let membresias = get(modalStore).data;
 
     // Endpoint
-    const url = `http://localhost:3000/api/membresia/edit/${membresias.id}`;
-
     const editarCliente = () => {
+        const url = `http://localhost:3000/api/membresia/edit/${membresias.id}`;
         axios
             .put(url, {
                 nombre_membresia: membresias.nombre,
@@ -23,6 +24,7 @@
             .then((res) => {
                 alert('Cliente actualizado exitosamente');
                 cerrarModal();
+                recargar();
             })
             .catch((err) => {
                 console.log(JSON.stringify(err));

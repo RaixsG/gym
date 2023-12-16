@@ -6,6 +6,7 @@
     const cerrarModal = () => {
         modalStore.set({ showModal: false, data: null });
     };
+    export let recargar;
 
     // Datos a editar
     let productos = get(modalStore).data;
@@ -21,8 +22,9 @@
                 cantidad_stock: productos.cantidad
             })
             .then((res) => {
-                alert('Producto actializado correctamente')
+                alert('Producto actualizado correctamente')
                 cerrarModal();
+                recargar();
             })
             .catch((err) => {
                 console.log(JSON.stringify(err));

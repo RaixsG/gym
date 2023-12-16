@@ -119,7 +119,7 @@
         width: 100%;
         border-collapse: collapse;
         transition: var(--tran-02);
-        table-layout: fixed;
+        /* table-layout: fixed; */
     }
 
     tfoot {

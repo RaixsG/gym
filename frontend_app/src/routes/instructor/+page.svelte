@@ -58,7 +58,7 @@
                 data = filter.map((item) => {
                     let fecha = dayjs
                         .utc(item.fecha_nacimiento)
-                        .format("DD/MM/YYYY");
+                        .format("YYYY-MM-DD");
                     let foto = null;
                     if (item.foto_instructor === null) {
                         foto = "Sin Foto";
@@ -134,6 +134,11 @@
             );
     };
 
+    function recargar () {
+        getTodosInstructores();
+        getInstructoresHorarios();
+    }
+
     onMount(() => {
         getTodosInstructores();
         getInstructoresHorarios();
@@ -186,13 +191,13 @@
     {#if showModal}
         <dialog>
             {#if component === "AddInstructor"}
-                <AddInstructor { addInstructor } />
+                <AddInstructor {recargar} { addInstructor } />
             {:else if component === "EditClient"}
-                <EditInstructor />
+                <EditInstructor {recargar} />
             {:else if component === "RegisterInstructor"}
-                <RegisterInstructor />
+                <RegisterInstructor {recargar} />
             {:else if component === "EditRegister"}
-                <EditRegisterInstructor />
+                <EditRegisterInstructor {recargar} />
             {/if}
         </dialog>
     {/if}

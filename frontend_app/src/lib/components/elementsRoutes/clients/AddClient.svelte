@@ -6,7 +6,7 @@
     export let addClient;
 
     const cerrarModal = () => {
-        modalStore.set({ showModal: false });
+        modalStore.set({ showModal: false, data: null });
     };
 
     // ENTRADA DE DATOS
@@ -48,38 +48,6 @@
                 console.log(JSON.stringify(err));
             });
     };
-
-    // Consultar clientes
-    // const getTodosClientes = () => {
-    //     const url = "http://localhost:3000/api/clientes/sininscripcion";
-    //     axios
-    //         .get(url)
-    //         .then((response) => {
-    //             const filter = response.data;
-    //             clients = filter.map((item) => {
-    //                 let fecha = dayjs
-    //                     .utc(item.fecha_nacimiento)
-    //                     .format("DD/MM/YYYY");
-    //                 let id = item.ID_cliente;
-    //                 return {
-    //                     id: id,
-    //                     nombre: item.nombre,
-    //                     apellido: item.apellido,
-    //                     direccion: item.direccion,
-    //                     telefono: item.telefono,
-    //                     correo: item.email,
-    //                     fecha_nacimiento: fecha,
-    //                 };
-    //             });
-    //         })
-    //         .catch((error) =>
-    //             alert(
-    //                 `Error en la peticion de clientes: ${JSON.stringify(
-    //                     error,
-    //                 )}`,
-    //             ),
-    //         );
-    // }
 </script>
 
 <form method="dialog" on:submit={createClient}>

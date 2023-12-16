@@ -3,8 +3,9 @@
     import { modalStore } from "../../../../store/modal.js";
 
     const cerrarModal = () => {
-        modalStore.set({ showModal: false });
+        modalStore.set({ showModal: false, data: null });
     };
+    export let recargar;
 
     // ENTRADA DE DATOS
     let nombre = null;
@@ -23,6 +24,7 @@
             .then(res => {
                 console.log('EXITO');
                 cerrarModal();
+                recargar();
             })
             .catch(err => {
                 console.log(JSON.stringify(err));

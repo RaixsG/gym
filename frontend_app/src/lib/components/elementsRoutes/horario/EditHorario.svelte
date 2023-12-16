@@ -6,6 +6,7 @@
     const cerrarModal = () => {
         modalStore.set({ showModal: false, data: null });
     };
+    export let recargar;
 
     // Datos a editar
     let user = get(modalStore).data;
@@ -23,6 +24,7 @@
             .then((res) => {
                 alert('Cliente actualizado exitosamente');
                 cerrarModal();
+                recargar();
             })
             .catch((err) => {
                 console.log(JSON.stringify(err));

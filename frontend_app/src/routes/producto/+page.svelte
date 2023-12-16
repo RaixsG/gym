@@ -38,7 +38,7 @@
         "Nombre Producto",
         "Descripción",
         "Precio",
-        "Cantidad"
+        "Cantidad Stock"
     ];
     let data = [];
 
@@ -85,6 +85,10 @@
             });
     };
 
+    function recargar () {
+        getTodosProductos();
+    }
+
     onMount(() => {
         getTodosProductos();
     })
@@ -107,9 +111,9 @@
     {#if showModal}
         <dialog>
             {#if component === "AddProducto"}
-                <AddProducto />
+                <AddProducto {recargar} />
             {:else if component === "EditClient"}
-                <EditProducto />
+                <EditProducto {recargar} />
             {/if}
         </dialog>
     {/if}

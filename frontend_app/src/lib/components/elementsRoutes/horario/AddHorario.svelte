@@ -5,8 +5,9 @@
     export let addHorario;
 
     const cerrarModal = () => {
-        modalStore.set({ showModal: false });
+        modalStore.set({ showModal: false, data: null });
     };
+    export let recargar;
 
     // ENTRADA DE DATOS
     let horario_inicio = null;
@@ -26,6 +27,7 @@
                 console.log('EXITO');
                 addHorario(response);
                 cerrarModal();
+                recargar();
             })
             .catch(err => {
                 console.log(JSON.stringify(err));

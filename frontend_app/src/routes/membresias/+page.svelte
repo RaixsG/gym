@@ -77,6 +77,10 @@
             });
     };
 
+    function recargar() {
+        getTodasMembresias();
+    }
+
     onMount(() => {
         getTodasMembresias();
     });
@@ -103,9 +107,9 @@
     {#if showModal}
         <dialog>
             {#if component === "AddMembresia"}
-                <AddMembresias />
+                <AddMembresias {recargar} />
             {:else if component === "EditClient"}
-                <EditMembresias />
+                <EditMembresias {recargar} />
             {/if}
         </dialog>
     {/if}

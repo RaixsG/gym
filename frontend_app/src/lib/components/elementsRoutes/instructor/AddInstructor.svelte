@@ -5,8 +5,10 @@
     export let addInstructor;
 
     const cerrarModal = () => {
-        modalStore.set({ showModal: false });
+        modalStore.set({ showModal: false, data: null });
     };
+
+    export let recargar;
 
     // ENTRADA DE DATOS
     let form = {
@@ -41,6 +43,7 @@
                 console.log("EXITO");
                 alert("Instructor agregado con éxito");
                 cerrarModal();
+                recargar();
             })
             .catch((err) => {
                 console.log(JSON.stringify(err));

@@ -15,7 +15,7 @@
     RegistrarPedido,
     PagoMembresia,
   } from "$lib/components/elementsRoutes/ventas";
-  import TablaActions from "$lib/components/global/table-actions/TablaActions.svelte";
+  import Tabla from "$lib/components/global/table/Tabla.svelte";
   import TablaVentas from "$lib/components/global/table-ventas/TablaVentas.svelte";
 
   // Protected route
@@ -60,7 +60,6 @@
     "Fecha de Pago",
     "Cantidad de Meses",
     "Metodo de Pago",
-    "Miembro",
     "ID Miembro",
   ];
   let ventaMembresias = [];
@@ -73,17 +72,18 @@
       .then((response) => {
         const filter = response.data;
         const datosPago = filter.pagos;
-        const nombresMiembros = filter.dataMiembro;
         ventaMembresias = datosPago.map((item) => {
           return {
             id: item.ID_pago_mem,
             fecha: dayjs.utc(item.fecha_pago).format("DD/MM/YYYY"),
             cantidad: item.cantidad,
             metodo_pago: item.metodo_pago,
-            miembro: nombresMiembros.clientes.nombre,
-            id_miembro: datosPago.map((item) => item.ID_miembro),
+            id_miembro: item.ID_miembro,
           };
         });
+        // console.log(filter);
+        // console.log(datosPago);
+        // console.log(nombresMiembros);
       })
       .catch((error) => {
         console.log(error);
@@ -167,7 +167,7 @@
         precio: item.sale.precio,
         cantidad_stock: item.sale.cantidad,
         total: item.sale.precio_total,
-        fecha: dayjs.utc(item.sale.fecha_pago).format("DD/MM/YYYY"),
+        fecha: item.sale.fecha_pago,
         metodo_pago: item.sale.metodo_pago,
         id_cliente: item.sale.id_cliente
       };
@@ -176,6 +176,10 @@
     doc.text(fechaHora, 14, 23);
     autoTable(doc, { columns, body: rows, startY: 30 });
     doc.save("reporte-ventas.pdf");
+  };
+
+  function recargar () {
+    location.reload();
   };
 
   onMount(() => {
@@ -224,7 +228,7 @@
             Pagar Membresía
           </button>
         </div>
-        <TablaActions headers={headersMembresias} data={ventaMembresias} />
+        <Tabla headers={headersMembresias} data={ventaMembresias} />
       </div>
     </div>
   </main>
@@ -234,7 +238,7 @@
     </dialog>
   {:else if component === "PagoMembresia"}
     <dialog>
-      <PagoMembresia />
+      <PagoMembresia {recargar} />
     </dialog>
   {/if}
 </div>

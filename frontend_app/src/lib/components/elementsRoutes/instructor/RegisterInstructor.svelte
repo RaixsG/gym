@@ -5,8 +5,10 @@
     import { onMount } from "svelte";
 
     const cerrarModal = () => {
-        modalStore.set({ showModal: false });
+        modalStore.set({ showModal: false, data: null });
     };
+
+    export let recargar;
 
     let data = get(modalStore).data;
     // ENTRADA DE DATOS
@@ -41,6 +43,7 @@
                 console.log('EXITO');
                 alert('Inscripción agregado con éxito');
                 cerrarModal();
+                recargar();
             })
             .catch(err => {
                 console.log(JSON.stringify(err));
