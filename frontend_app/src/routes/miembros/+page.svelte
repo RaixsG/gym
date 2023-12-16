@@ -32,7 +32,7 @@
 
     let headers = [
         "ID Pago",
-        "Miembro",
+        "ID Miembro",
         "Teléfono",
         "Membresía",
         "Precio Unitario Mensual",
@@ -51,7 +51,6 @@
             const filter = response.data;
             const datosPago = filter.pagos;
             const datosInscripcion = filter.inscripcion;
-            const datosHorarios = filter.horarios;
             const datosMembresias = filter.membresias;
             const datosClientes = filter.clientes;
 
@@ -106,30 +105,21 @@
                     estado_inscripcion: estado_inscripcion[0],
                 };
             });
-            // console.log(filter);
         });
     };
 
-    const generateReport = (months) => {
-        const filteredData = data.filter((item) => {
-            const fecha_inscripcion = new Date(item.fecha_inscripcion);
-            const endDate = new Date();
-            endDate.setMonth(endDate.getMonth() - months);
-            return fecha_inscripcion >= endDate;
-        });
-
+    const generateReport = () => {
         const doc = new jsPDF();
         doc.text("Reporte de pago de Membresias", 10, 10);
         autoTable(doc, {
             startY: 20,
-            body: filteredData.map((item) => [
+            body: data.map((item) => [
                 item.id,
                 item.miembro,
                 item.telefono,
-                item.horario,
-                item.membresia,
+                item.membresias,
+                item.precioUnitario,
                 item.precioMensual,
-                item.pagoTotal,
                 item.fecha_inscripcion,
                 item.fecha_vencimiento,
                 item.estado_inscripcion,
@@ -138,16 +128,15 @@
                 { header: "ID", dataKey: "id" },
                 { header: "Miembro", dataKey: "miembro" },
                 { header: "Telefono", dataKey: "telefono" },
-                { header: "Horario", dataKey: "horario" },
                 { header: "Membresia", dataKey: "membresia" },
-                { header: "Precio Mensual", dataKey: "precioMensual" },
-                { header: "Pago Total", dataKey: "pagoTotal" },
+                { header: "Precio Mensual", dataKey: "precioUnitario" },
+                { header: "Pago Total", dataKey: "precioMensual" },
                 { header: "Fecha Inscripcion", dataKey: "fecha_inscripcion" },
                 { header: "Fecha Vencimiento", dataKey: "fecha_vencimiento" },
                 { header: "Estado Inscripcion", dataKey: "estado_inscripcion" },
             ],
         });
-        doc.save(`reporte_${months}_meses.pdf`);
+        doc.save(`reporte_completo.pdf`);
     };
 
     onMount(() => {
@@ -160,14 +149,8 @@
         <h1>Miembros</h1>
         <section class="contend-table">
             <div class="buttons">
-                <button on:click={() => generateReport(1)}
-                    >Reporte último mes</button
-                >
-                <button on:click={() => generateReport(6)}
-                    >Reporte últimos 6 meses</button
-                >
-                <button on:click={() => generateReport(12)}
-                    >Reporte anual</button
+                <button on:click={() => generateReport()}
+                    >Reporte</button
                 >
             </div>
             <Tabla {headers} {data} />
